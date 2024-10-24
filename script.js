@@ -72,9 +72,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateVisualization(pokemonName) {
         const pokemon = pokemonStats.find(p => p.name === pokemonName); 
+        console.log(pokemon)
         if (pokemon) {
             renderPokemonStatsChart(pokemon);
             renderRadarChart(pokemon)
+            console.log(pokemon.image_filename);
+            document.getElementById("pokemonImage").src = `Dataset/images/pokemon_jpg/${pokemon.image_filename}`;
+            document.getElementById("pokemonImage").style.display = "block";
         } else {
             console.error("Pokémon not found: ", pokemonName);
         }
