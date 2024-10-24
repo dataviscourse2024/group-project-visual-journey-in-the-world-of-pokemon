@@ -37,7 +37,7 @@
 
 .split-section {
     display: flex;
-    padding: 0;  /* Remove padding for split sections */
+    padding: 0; 
   }
 
   .split-half {
@@ -144,15 +144,15 @@
   }
 
   .left-half, .right-half {
-      flex: 1; /* Divide into two equal halves */
+      flex: 1;
       height: 100%;
   }
 
   .left-half {
       background-color: #f8f9fa;
       padding: 20px;
-      overflow-y: auto; /* Enable scrolling for left half */
-      border-right: 1px solid #ddd; /* Optional: to visually separate the halves */
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
   }
 
   .right-half {
@@ -161,12 +161,11 @@
   }
 
   #allPokemonStats {
-      max-height: 80vh; /* Adjust this based on your layout */
-      overflow-y: auto; /* Enable scrolling for stats content */
+      max-height: 80vh;
+      overflow-y: auto;
       width: 100%;
   }
 
-  /* Table styling */
   .pokemon-stats-table {
       width: 100%;
       border-collapse: collapse;

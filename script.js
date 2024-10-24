@@ -1,21 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // URLs for the CSV files
     const pokemonStatsUrl = "Dataset/Preprocessed/pokemon_stats_with_images.csv";
     const combatResultsUrl = "Dataset/Preprocessed/combats_results.csv";
 
-    // Store loaded data
     let pokemonStats = [];
     let combatResults = [];
 
-    // Load both CSV files using Promise.all to ensure both are loaded
     Promise.all([
         d3.csv(pokemonStatsUrl),
         d3.csv(combatResultsUrl)
     ]).then(function([statsData, combatData]) {
         pokemonStats = statsData;
         combatResults = combatData;
-        // console.log("Pokemon Stats loaded:", pokemonStats.length);
-        // console.log("Combat Results loaded:", combatResults.length);
+        // console.log("Pokemon Stats loaded:");
+        // console.log("Combat Results loaded:");
         displayAllPokemonStats(pokemonStats);
         d3.select("#pokemonVisualization").html("<h3>Select a Pokémon to see its visualization</h3>");
         initializeInterface();
@@ -26,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Section 1 - Left
     function displayAllPokemonStats(pokemonStats) {
-        // Create a table element
         let statsTable = `<table class="pokemon-stats-table">
             <thead>
                 <tr>
@@ -43,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
             </thead>
             <tbody>`;
 
-        // Loop through each Pokémon and add a row in the table
         pokemonStats.forEach((pokemon, index) => {
             statsTable += `
                 <tr>
@@ -62,27 +57,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
         statsTable += `</tbody></table>`;
 
-        // Inject the table into the left half of Section 1
         d3.select("#allPokemonStats").html(statsTable);
     }
 
-    // Ensure you have a single event listener for the table
     d3.select("#allPokemonStats").on("click", function(event) {
         const target = d3.select(event.target);
         
-        // Check if the target is a table cell containing the Pokémon name
         if (target.node().tagName === "TD") {
-            const row = target.node().parentNode; // Get the parent row
-            const pokemonName = row.cells[1].textContent; // Assuming the Pokémon name is in the second cell
+            const row = target.node().parentNode; 
+            const pokemonName = row.cells[1].textContent;  //pokemon name is 2nd column
             updateVisualization(pokemonName);
         }
     });
 
-    // Update the visualization on the right side based on the selected Pokémon
     function updateVisualization(pokemonName) {
-        const pokemon = pokemonStats.find(p => p.name === pokemonName); // Find selected Pokémon
+        const pokemon = pokemonStats.find(p => p.name === pokemonName); 
         if (pokemon) {
-            renderPokemonStatsChart(pokemon); // Call the chart function with the selected Pokémon
+            renderPokemonStatsChart(pokemon);
             renderRadarChart(pokemon)
         } else {
             console.error("Pokémon not found: ", pokemonName);
@@ -93,10 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function renderPokemonStatsChart(pokemon) {
         const chartContainer = d3.select("#pokemonVisualization");
         
-        // Clear previous content
         chartContainer.html("");
 
-        // Create a chart for the selected Pokémon
         const svg = chartContainer.append("svg")
         .attr("width", 400)
         .attr("height", 200);
@@ -136,26 +125,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function RadarChart(parentSelector, data, options) {
         const cfg = {
-            w: 600, // Width of the radar chart
-            h: 600, // Height of the radar chart
-            maxValue: 200, // Maximum value for scaling
-            levels: 5, // Number of levels for the radar chart
-            roundStrokes: true, // Rounded strokes
-            color: d3.scaleOrdinal(d3.schemeCategory10) // Color scheme
+            w: 600, 
+            h: 600, 
+            maxValue: 200, 
+            levels: 5, 
+            roundStrokes: true,
+            color: d3.scaleOrdinal(d3.schemeCategory10) 
         };
     
-        // Override default options with user options
         if (options) {
             Object.keys(options).forEach((key) => {
                 cfg[key] = options[key];
             });
         }
     
-        // Set up the SVG container
         const radius = Math.min(cfg.w / 2, cfg.h / 2);
         const angleSlice = (Math.PI * 2) / cfg.maxValue;
     
-        // Create a wrapper for the radar chart
         const svg = d3.select(parentSelector)
             .append("svg")
             .attr("width", cfg.w)
@@ -163,7 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .append("g")
             .attr("transform", `translate(${cfg.w / 2}, ${cfg.h / 2})`);
     
-        // Draw the background circles for the levels
         for (let j = 0; j < cfg.levels; j++) {
             const levelFactor = radius * ((j + 1) / cfg.levels);
             svg.selectAll(".levels")
@@ -180,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 .attr("fill", "none");
         }
     
-        // Create the radar chart by binding the data
         const radarLine = d3.lineRadial()
             .radius(d => (d.value / cfg.maxValue) * radius)
             .angle((d, i) => i * angleSlice);
@@ -194,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("stroke", cfg.color(0))
             .style("stroke-width", 2);
     
-        // Add the axes
         data[0].forEach((d, i) => {
             const angle = i * angleSlice;
             svg.append("line")
@@ -212,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .style("font-size", "10px");
         });
     }
-    
+
     function renderRadarChart(pokemon) {
         const stats = [
             { axis: "HP", value: pokemon.hp },
@@ -223,14 +206,12 @@ document.addEventListener("DOMContentLoaded", function () {
             { axis: "Speed", value: pokemon.speed }
         ];
         
-        const chartContainer = d3.select("#pokemonVisualization"); // Change to the right container
+        const chartContainer = d3.select("#pokemonVisualization"); 
         const radarChartSize = 300;
     
-        // Clear previous chart titles or charts
         chartContainer.html(""); 
-        chartContainer.append("h3").text(`${pokemon.name}`); // Set the title
+        chartContainer.append("h3").text(`${pokemon.name}`);
     
-        // Radar chart generation logic
         RadarChart(chartContainer.node(), [stats], {
             w: radarChartSize,
             h: radarChartSize,
@@ -278,15 +259,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //section 2 - Battle Arena
     function initializeInterface() {
-        // Get dropdown elements
         const dropdown1 = d3.select("#pokemon1");
         const dropdown2 = d3.select("#pokemon2");
 
-        // Clear existing options
         dropdown1.html("");
         dropdown2.html("");
 
-        // Add default option
         dropdown1.append("option")
             .attr("value", "")
             .text("Select Pokémon");
@@ -295,23 +273,18 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("value", "")
             .text("Select Pokémon");
 
-        // Sort Pokémon by name
         const sortedPokemon = [...pokemonStats].sort((a, b) => a.name.localeCompare(b.name));
 
-        // Populate dropdowns
         sortedPokemon.forEach(pokemon => {
             dropdown1.append("option")
                 .attr("value", pokemon.name)
-                // .text(`${pokemon.name} (#${pokemon.pokedex_number})`);
                 .text(`${pokemon.name}`);
             
             dropdown2.append("option")
                 .attr("value", pokemon.name)
-                // .text(`${pokemon.name} (#${pokemon.pokedex_number})`);
                 .text(`${pokemon.name}`);
         });
 
-        // Add event listeners
         dropdown1.on("change", function() {
             updatePokemonDisplay(1);
             calculateWinner();
@@ -322,7 +295,6 @@ document.addEventListener("DOMContentLoaded", function () {
             calculateWinner();
         });
 
-        // Initialize with default images
         updatePokemonDisplay(1);
         updatePokemonDisplay(2);
     }
@@ -345,7 +317,6 @@ document.addEventListener("DOMContentLoaded", function () {
             imgElement.attr("src", imagePath)
                 .attr("alt", `${pokemon.name} image`);
 
-            // Update stats display if you want to show additional information
             const statsHtml = `
                 <div class="pokemon-stats">
                     <p>Type: ${pokemon.type1}${pokemon.type2 ? '/' + pokemon.type2 : ''}</p>
@@ -359,7 +330,7 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
             d3.select(`#pokemon${pokemonNumber}Stats`).html(statsHtml);
         } else {
-            // Set default image if no Pokémon selected or image doesn't exist
+            // change default image if not found
             imgElement.attr("src", "Dataset/images/pokemon_jpg/1.jpg")
                 .attr("alt", "Select a Pokémon");
             d3.select(`#pokemon${pokemonNumber}Stats`).html("");
@@ -380,14 +351,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Find the battle result
         const result = combatResults.find(r => 
             (r.name_first === pokemon1Name && r.name_second === pokemon2Name) ||
             (r.name_first === pokemon2Name && r.name_second === pokemon1Name)
         );
 
         if (result) {
-            // Get winner's stats for more detailed display
             const winner = pokemonStats.find(p => p.name === result.winner_name);
             d3.select("#winner")
                 .html(`
