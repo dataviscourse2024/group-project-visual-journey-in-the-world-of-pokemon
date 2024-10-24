@@ -127,102 +127,247 @@ document.addEventListener("DOMContentLoaded", function () {
             .text(d => d.value);
     }
 
+    // function RadarChart(parentSelector, data, options) {
+    //     const cfg = {
+    //         w: 600, 
+    //         h: 600, 
+    //         maxValue: 200, 
+    //         levels: 5, 
+    //         roundStrokes: true,
+    //         color: d3.scaleOrdinal(d3.schemeCategory10) 
+    //     };
+    
+    //     if (options) {
+    //         Object.keys(options).forEach((key) => {
+    //             cfg[key] = options[key];
+    //         });
+    //     }
+    
+    //     const radius = Math.min(cfg.w / 2, cfg.h / 2);
+    //     const angleSlice = (Math.PI * 2) / cfg.maxValue;
+    
+    //     const svg = d3.select(parentSelector)
+    //         .append("svg")
+    //         .attr("width", cfg.w)
+    //         .attr("height", cfg.h)
+    //         .append("g")
+    //         .attr("transform", `translate(${cfg.w / 2}, ${cfg.h / 2})`);
+    
+    //     for (let j = 0; j < cfg.levels; j++) {
+    //         const levelFactor = radius * ((j + 1) / cfg.levels);
+    //         svg.selectAll(".levels")
+    //             .data(data[0])
+    //             .enter()
+    //             .append("line")
+    //             .attr("class", "line")
+    //             .attr("x1", (d, i) => levelFactor * (1 - Math.sin(i * angleSlice)))
+    //             .attr("y1", (d, i) => levelFactor * (1 - Math.cos(i * angleSlice)))
+    //             .attr("x2", (d, i) => levelFactor * (1 - Math.sin(i * angleSlice + angleSlice)))
+    //             .attr("y2", (d, i) => levelFactor * (1 - Math.cos(i * angleSlice + angleSlice)))
+    //             .attr("stroke", "grey")
+    //             .attr("stroke-width", "0.3px")
+    //             .attr("fill", "none");
+    //     }
+    
+    //     const radarLine = d3.lineRadial()
+    //         .radius(d => (d.value / cfg.maxValue) * radius)
+    //         .angle((d, i) => i * angleSlice);
+    
+    //     const blob = svg.append("path")
+    //         .datum(data[0])
+    //         .attr("class", "radar-chart")
+    //         .attr("d", radarLine)
+    //         .style("fill", cfg.color(0))
+    //         .style("fill-opacity", 0.5)
+    //         .style("stroke", cfg.color(0))
+    //         .style("stroke-width", 2);
+    
+    //     data[0].forEach((d, i) => {
+    //         const angle = i * angleSlice;
+    //         svg.append("line")
+    //             .attr("x1", 0)
+    //             .attr("y1", 0)
+    //             .attr("x2", radius * Math.sin(angle))
+    //             .attr("y2", -radius * Math.cos(angle))
+    //             .attr("stroke", "black")
+    //             .attr("stroke-width", "1px");
+            
+    //         svg.append("text")
+    //             .attr("x", (radius + 10) * Math.sin(angle))
+    //             .attr("y", -(radius + 10) * Math.cos(angle))
+    //             .text(d.axis)
+    //             .style("font-size", "10px");
+    //     });
+    // }
+
+    // function renderRadarChart(pokemon) {
+    //     const stats = [
+    //         { axis: "HP", value: pokemon.hp },
+    //         { axis: "Attack", value: pokemon.attack },
+    //         { axis: "Defense", value: pokemon.defense },
+    //         { axis: "Sp. Attack", value: pokemon.sp_attack },
+    //         { axis: "Sp. Defense", value: pokemon.sp_defense },
+    //         { axis: "Speed", value: pokemon.speed }
+    //     ];
+        
+    //     const chartContainer = d3.select("#pokemonVisualization"); 
+    //     const radarChartSize = 300;
+    
+    //     chartContainer.html(""); 
+    //     chartContainer.append("h3").text(`${pokemon.name}`);
+    
+    //     RadarChart(chartContainer.node(), [stats], {
+    //         w: radarChartSize,
+    //         h: radarChartSize,
+    //         maxValue: 200,
+    //         levels: 5,
+    //         roundStrokes: true,
+    //         color: d3.scaleOrdinal().range(["#4285f4"])
+    //     });
+    // }
+
     function RadarChart(parentSelector, data, options) {
+        // Set default configuration
         const cfg = {
-            w: 600, 
-            h: 600, 
-            maxValue: 200, 
-            levels: 5, 
-            roundStrokes: true,
-            color: d3.scaleOrdinal(d3.schemeCategory10) 
+            w: 300,  // Width
+            h: 300,  // Height
+            maxValue: 200,
+            levels: 5,
+            color: "#4285f4"
         };
     
-        if (options) {
-            Object.keys(options).forEach((key) => {
-                cfg[key] = options[key];
-            });
-        }
+        // Merge options
+        Object.assign(cfg, options);
     
-        const radius = Math.min(cfg.w / 2, cfg.h / 2);
-        const angleSlice = (Math.PI * 2) / cfg.maxValue;
+        // Calculate positions
+        const allAxis = data[0].map(d => d.axis);
+        const total = allAxis.length;
+        const radius = Math.min(cfg.w/2, cfg.h/2);
+        const angleSlice = Math.PI * 2 / total;
     
+        // Create SVG container
         const svg = d3.select(parentSelector)
             .append("svg")
             .attr("width", cfg.w)
             .attr("height", cfg.h)
             .append("g")
-            .attr("transform", `translate(${cfg.w / 2}, ${cfg.h / 2})`);
+            .attr("transform", `translate(${cfg.w/2}, ${cfg.h/2})`);
     
+        // Create scales
+        const rScale = d3.scaleLinear()
+            .range([0, radius])
+            .domain([0, cfg.maxValue]);
+    
+        // Draw grid lines
         for (let j = 0; j < cfg.levels; j++) {
             const levelFactor = radius * ((j + 1) / cfg.levels);
+            
+            // Draw circles
             svg.selectAll(".levels")
-                .data(data[0])
+                .data([1])
                 .enter()
-                .append("line")
-                .attr("class", "line")
-                .attr("x1", (d, i) => levelFactor * (1 - Math.sin(i * angleSlice)))
-                .attr("y1", (d, i) => levelFactor * (1 - Math.cos(i * angleSlice)))
-                .attr("x2", (d, i) => levelFactor * (1 - Math.sin(i * angleSlice + angleSlice)))
-                .attr("y2", (d, i) => levelFactor * (1 - Math.cos(i * angleSlice + angleSlice)))
-                .attr("stroke", "grey")
-                .attr("stroke-width", "0.3px")
-                .attr("fill", "none");
+                .append("circle")
+                .attr("r", levelFactor)
+                .style("fill", "none")
+                .style("stroke", "#CDCDCD")
+                .style("stroke-width", "0.5px");
+    
+            // Add level values
+            svg.append("text")
+                .attr("x", 5)
+                .attr("y", -levelFactor)
+                .attr("fill", "#737373")
+                .style("font-size", "10px")
+                .text((j + 1) * (cfg.maxValue / cfg.levels));
         }
     
-        const radarLine = d3.lineRadial()
-            .radius(d => (d.value / cfg.maxValue) * radius)
-            .angle((d, i) => i * angleSlice);
+        // Draw axis
+        const axis = svg.selectAll(".axis")
+            .data(allAxis)
+            .enter()
+            .append("g")
+            .attr("class", "axis");
     
-        const blob = svg.append("path")
-            .datum(data[0])
-            .attr("class", "radar-chart")
-            .attr("d", radarLine)
-            .style("fill", cfg.color(0))
-            .style("fill-opacity", 0.5)
-            .style("stroke", cfg.color(0))
-            .style("stroke-width", 2);
+        // Draw axis lines
+        axis.append("line")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", (d, i) => rScale(cfg.maxValue * 1.1) * Math.cos(angleSlice * i - Math.PI/2))
+            .attr("y2", (d, i) => rScale(cfg.maxValue * 1.1) * Math.sin(angleSlice * i - Math.PI/2))
+            .style("stroke", "#CDCDCD")
+            .style("stroke-width", "1px");
     
-        data[0].forEach((d, i) => {
-            const angle = i * angleSlice;
-            svg.append("line")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", radius * Math.sin(angle))
-                .attr("y2", -radius * Math.cos(angle))
-                .attr("stroke", "black")
-                .attr("stroke-width", "1px");
-            
-            svg.append("text")
-                .attr("x", (radius + 10) * Math.sin(angle))
-                .attr("y", -(radius + 10) * Math.cos(angle))
-                .text(d.axis)
-                .style("font-size", "10px");
+        // Add labels
+        axis.append("text")
+            .attr("class", "legend")
+            .style("font-size", "11px")
+            .attr("text-anchor", "middle")
+            .attr("x", (d, i) => rScale(cfg.maxValue * 1.2) * Math.cos(angleSlice * i - Math.PI/2))
+            .attr("y", (d, i) => rScale(cfg.maxValue * 1.2) * Math.sin(angleSlice * i - Math.PI/2))
+            .text(d => d);
+    
+        // Plot data
+        const dataPoints = data[0].map((d, i) => {
+            return {
+                x: rScale(d.value) * Math.cos(angleSlice * i - Math.PI/2),
+                y: rScale(d.value) * Math.sin(angleSlice * i - Math.PI/2)
+            };
         });
+    
+        // Create line generator
+        const lineGenerator = d3.line()
+            .x(d => d.x)
+            .y(d => d.y);
+    
+        // Draw the path
+        svg.append("path")
+            .datum(dataPoints)
+            .attr("d", lineGenerator)
+            .style("fill", cfg.color)
+            .style("fill-opacity", 0.3)
+            .style("stroke", cfg.color)
+            .style("stroke-width", "2px");
+    
+        // Add dots
+        svg.selectAll(".dot")
+            .data(dataPoints)
+            .enter()
+            .append("circle")
+            .attr("class", "dot")
+            .attr("r", 4)
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .style("fill", cfg.color);
     }
-
+    
     function renderRadarChart(pokemon) {
+        if (!pokemon) {
+            console.error("No pokemon data provided");
+            return;
+        }
+    
         const stats = [
             { axis: "HP", value: pokemon.hp },
             { axis: "Attack", value: pokemon.attack },
             { axis: "Defense", value: pokemon.defense },
-            { axis: "Sp. Attack", value: pokemon.sp_attack },
-            { axis: "Sp. Defense", value: pokemon.sp_defense },
+            { axis: "Sp. Atk", value: pokemon.sp_attack },
+            { axis: "Sp. Def", value: pokemon.sp_defense },
             { axis: "Speed", value: pokemon.speed }
         ];
-        
-        const chartContainer = d3.select("#pokemonVisualization"); 
-        const radarChartSize = 300;
     
-        chartContainer.html(""); 
-        chartContainer.append("h3").text(`${pokemon.name}`);
+        const chartContainer = d3.select("#pokemonVisualization");
+        chartContainer.html("");
+    
+        chartContainer.append("h3")
+            .attr("class", "text-center mb-3")
+            .text(pokemon.name);
     
         RadarChart(chartContainer.node(), [stats], {
-            w: radarChartSize,
-            h: radarChartSize,
+            w: 200,
+            h: 200,
             maxValue: 200,
             levels: 5,
-            roundStrokes: true,
-            color: d3.scaleOrdinal().range(["#4285f4"])
+            color: "#4285f4"
         });
     }
 
