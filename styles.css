@@ -59,3 +59,95 @@
     border-left: 1px;
   }
 
+  .battle-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem 0;
+  }
+
+  .pokemon-select-area {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+  }
+
+  .pokemon-display {
+    text-align: center;
+    margin: 1rem 0;
+  }
+
+  .pokemon-image {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+    /* margin: 1rem 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px; */
+    padding: 1rem;
+  }
+
+  .versus-image{
+      width: 250px;
+      height: 250px;
+      object-fit: contain;
+      /* margin: 1rem 0;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 10px; */
+      padding: 1rem;
+  }
+
+  .vs-badge {
+    background-color: #dc3545;
+    color: white;
+    padding: 0.5rem 2rem;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+
+  .battle-button-area {
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  body {
+    padding-top: 56px;
+    /* Navbar height */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+  .section {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 2rem 0; */
+  }
+
+  #section1 {
+    background-color: #f8f9fa;
+  }
+
+  #section2 {
+    background-color: #e9ecef;
+    align-items: center;
+    /* justify-content: center; */
+  }
+
+  #section3 {
+    background-color: #dee2e6;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    height: 100%;
+  }
