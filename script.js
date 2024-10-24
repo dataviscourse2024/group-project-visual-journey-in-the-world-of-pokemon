@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // console.log("Pokemon Stats loaded:");
         // console.log("Combat Results loaded:");
         displayAllPokemonStats(pokemonStats);
-        d3.select("#pokemonVisualization").html("<h3>Select a Pokémon to see its visualization</h3>");
+        //d3.select("#pokemonVisualization").html("<h3>Select a Pokémon to see its visualization</h3>");
         initializeInterface();
     }).catch(function(error) {
         console.error("Error loading data:", error);
