@@ -216,11 +216,6 @@ html {
   padding: 20px;
 }
 
-.stats-cell {
-  /* padding: 15px;
-  margin-bottom: 20px; */
-}
-
 .pokemon-image {
   max-width: 100%;
   height: auto;
@@ -230,10 +225,7 @@ html {
 .stats-cell {
   border: 1px solid #dee2e6;
   border-radius: 8px;
-}
-
-.stats-cell {
-  height: 300px;  /* Fixed height for consistent grid cells */
+  /* height: 300px;   */
   padding: 15px;
   display: flex;
   flex-direction: column;

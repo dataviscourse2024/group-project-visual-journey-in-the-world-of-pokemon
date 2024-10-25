@@ -91,9 +91,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const boxPlotContainer = d3.select("#boxPlotVisualization");
         boxPlotContainer.html("");
 
-        const margin = { top: 5, right: 5, bottom: 5, left: 5 };
-        const width = 200 - margin.left - margin.right;
-        const height = 200 - margin.top - margin.bottom;
+        const margin = { top: 50, right: 60, bottom: 60, left: 60 };
+        const width = 600 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
 
         const svg = boxPlotContainer.append("svg")
             .attr("width", width + margin.left + margin.right)
