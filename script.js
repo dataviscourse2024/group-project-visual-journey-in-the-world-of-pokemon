@@ -71,11 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         rows.on("click", function(event) {
             rows.classed("selected", false);
-
             d3.select(this).classed("selected", true);
-
-            const pokemonName = d3.select(this).attr("data-pokemon-name");
-            updateVisualization(pokemonName);  
         });
 
         // on click on table - show visualization on right
@@ -91,12 +87,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateVisualization(pokemonName) {
+        console.log(pokemonName)
         const pokemon = pokemonStats.find(p => p.name === pokemonName);
         console.log(pokemon)
         if (pokemon) {
             // renderPokemonStatsChart(pokemon);
             renderRadarChart(pokemon);
             renderBoxPlot(pokemon);
+            renderRadarChart(pokemon);
             console.log(pokemon.image_filename);
             document.getElementById("pokemonImage").src = `Dataset/images/pokemon_jpg/${pokemon.image_filename}`;
             document.getElementById("pokemonImage").style.display = "block";
@@ -491,7 +489,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const dropdownId = `pokemon${pokemonNumber}`;
         const imageId = `pokemon${pokemonNumber}Image`;
         const selectedName = d3.select(`#${dropdownId}`).property("value");
-        console.log(selectedName)
+        // console.log(selectedName)
         const pokemon = pokemonStats.find(p => p.name === selectedName);
         const imgElement = d3.select(`#${imageId}`);
         
