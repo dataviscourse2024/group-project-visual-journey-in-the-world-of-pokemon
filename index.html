@@ -14,38 +14,21 @@
 <body>
     <header>
         <nav class="navbar navbar-dark navbar-expand-sm fixed-top">
-            <div class="container">
+            <div class="container" style="margin-left: 10px;">
+                <img src="assets/pokeball.png" alt="Pokeball" class="navbar-brand" style="width: 35px;">
                 <a class="navbar-brand mr-auto" href="/">Visual Journey in the World of Pokemon</a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li> -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#section2">Battle Simulator</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                            <a class="nav-link" href="#section3">Type Chart</a>
                         </li>
                     </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
                 </div>
             </div>
         </nav>
@@ -60,25 +43,27 @@
                 </div>
             </div>
             <div class="container split-half">
-                    <div class="container stats-card text-center">
-                      <h1>Pokemon Visualization</h1>
-                        <div class="row stats-row">
-                            <div class="col-md-6 align-self-center stats-cell"><img id="pokemoncardImage">
-                              <!-- src="Dataset\images\pokemon_jpg\2.jpg" alt="Pokemon 1" class="pokemon-image"></div> -->
-                              <img id="pokemonImage" src="" alt="Pokemon Image" class="pokemon-image" style="display: none;">
-                            <div class="col-md-6 align-self-center stats-cell">
-                                <div id="pokemoncardStats" class="pokemon-stats"> Second Cell</div>
-                            </div>
-
-                            <div class="w-100"></div>
-
-                            <div class="col-md-6 align-self-center stats-cell">
-                                <div id="pokemonVisualization">Third Cell</div>
-                            </div>
-                            <div class="col-md-6 align-self-center stats-cell">Fourth Cell</div>
+                <div class="container stats-card text-center">
+                    <h1>Pokemon Visualization</h1>
+                    <div class="row"> <!-- Main row -->
+                        <!-- First row of the 2x2 grid -->
+                        <div class="col-md-6 stats-cell">
+                            <img id="pokemonImage" src="" alt="Pokemon Image" class="pokemon-image" style="display: none;">
+                        </div>
+                        <div class="col-md-6 stats-cell">
+                            <div id="pokemoncardStats" class="pokemon-stats">Stats Card TBD</div>
+                        </div>
+                        
+                        <!-- Second row of the 2x2 grid -->
+                        <div class="col-md-6 stats-cell">
+                            <div id="pokemonVisualization"></div>
+                        </div>
+                        <div class="col-md-6 stats-cell">
+                            <div id="boxPlotVisualization"></div>
                         </div>
                     </div>
-
+                </div>
+            </div>
         </section>
 
         <section id="section2" class="section">
