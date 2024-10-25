@@ -59,17 +59,36 @@ document.addEventListener("DOMContentLoaded", function () {
         statsTable += `</tbody></table>`;
 
         d3.select("#allPokemonStats").html(statsTable);
+
+        //Hover effects
+        const rows = d3.selectAll(".pokemon-stats-table tbody tr");
+        rows.on("mouseover", function() {
+            d3.select(this).style("background-color", "#ff6347"); 
+        })
+        .on("mouseout", function() {
+            d3.select(this).style("background-color", null);
+        });
+
+        rows.on("click", function(event) {
+            rows.classed("selected", false);
+
+            d3.select(this).classed("selected", true);
+
+            const pokemonName = d3.select(this).attr("data-pokemon-name");
+            updateVisualization(pokemonName);  
+        });
+
+        // on click on table - show visualization on right
+        d3.select("#allPokemonStats").on("click", function (event) {
+            const target = d3.select(event.target);
+
+            if (target.node().tagName === "TD") {
+                const row = target.node().parentNode;
+                const pokemonName = row.cells[1].textContent;  //pokemon name is 2nd column
+                updateVisualization(pokemonName);
+            }
+        });
     }
-
-    d3.select("#allPokemonStats").on("click", function (event) {
-        const target = d3.select(event.target);
-
-        if (target.node().tagName === "TD") {
-            const row = target.node().parentNode;
-            const pokemonName = row.cells[1].textContent;  //pokemon name is 2nd column
-            updateVisualization(pokemonName);
-        }
-    });
 
     function updateVisualization(pokemonName) {
         const pokemon = pokemonStats.find(p => p.name === pokemonName);

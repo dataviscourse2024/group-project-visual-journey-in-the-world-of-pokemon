@@ -184,6 +184,14 @@ main {
   text-align: left;
 }
 
+/* .pokemon-stats-table tbody tr:hover {
+  background-color: #f0f8ff; 
+} */
+
+.pokemon-stats-table tbody tr.selected {
+  background-color: #ff4500;
+}
+
 
 #section2 {
   background-color: #e9ecef;
@@ -212,6 +220,7 @@ html {
     justify-content: center;
     padding: 2rem;
   } */
+   
 .stats-card {
   padding: 20px;
 }
@@ -221,7 +230,6 @@ html {
   height: auto;
 }
 
-/* Optional: Add borders to visualize the grid */
 .stats-cell {
   border: 1px solid #dee2e6;
   border-radius: 8px;
