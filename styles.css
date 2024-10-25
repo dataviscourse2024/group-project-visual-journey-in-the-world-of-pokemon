@@ -232,12 +232,20 @@ html {
   border-radius: 8px;
 }
 
-#boxPlotVisualization {
+.stats-cell {
+  height: 300px;  /* Fixed height for consistent grid cells */
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#pokemonVisualization, #boxPlotVisualization {
   width: 100%;
-  /* max-width: 600px; */
-  margin: 0 auto;
-  /* background: white; */
-  padding: 20px;
-  /* border-radius: 8px; */
-  /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
