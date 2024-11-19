@@ -262,49 +262,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .text("Stat Range");
     }
 
-    // // Section 1 - Right   ->   Cell 3
-    // function renderPokemonStatsChart(pokemon) {
-    //     const chartContainer = d3.select("#pokemonVisualization");
-
-    //     chartContainer.html("");
-
-    //     const svg = chartContainer.append("svg")
-    //     .attr("width", 400)
-    //     .attr("height", 200);
-
-    //     const stats = [
-    //         { label: "HP", value: pokemon.hp },
-    //         { label: "Attack", value: pokemon.attack },
-    //         { label: "Defense", value: pokemon.defense },
-    //         { label: "Sp. Attack", value: pokemon.sp_attack },
-    //         { label: "Sp. Defense", value: pokemon.sp_defense },
-    //         { label: "Speed", value: pokemon.speed }
-    //     ];
-
-    //     const x = d3.scaleBand().domain(stats.map(d => d.label)).range([0, 400]).padding(0.2);
-    //     const y = d3.scaleLinear().domain([0, 200]).range([200, 0]);
-
-    //     svg.selectAll(".bar")
-    //         .data(stats)
-    //         .enter()
-    //         .append("rect")
-    //         .attr("class", "bar")
-    //         .attr("x", d => x(d.label))
-    //         .attr("y", d => y(d.value))
-    //         .attr("width", x.bandwidth())
-    //         .attr("height", d => 200 - y(d.value))
-    //         .attr("fill", "#4285f4");
-
-    //     svg.selectAll(".label")
-    //         .data(stats)
-    //         .enter()
-    //         .append("text")
-    //         .attr("x", d => x(d.label) + x.bandwidth() / 2)
-    //         .attr("y", d => y(d.value) - 5)
-    //         .attr("text-anchor", "middle")
-    //         .text(d => d.value);
-    // }
-
     // Section 1 - Right (Radar Chart in Cell 3)
     function renderRadarChart(pokemon) {
         if (!pokemon) {
@@ -324,7 +281,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const chartContainer = d3.select("#pokemonVisualization");
         chartContainer.html("");
 
-        // Get the container dimensions
         const containerWidth = chartContainer.node().getBoundingClientRect().width;
         const containerHeight = chartContainer.node().getBoundingClientRect().height;
         const chartSize = Math.min(containerWidth, containerHeight) * 0.9; // 90% of the smallest dimension
@@ -498,18 +454,18 @@ document.addEventListener("DOMContentLoaded", function () {
             imgElement.attr("src", imagePath)
                 .attr("alt", `${pokemon.name} image`);
     
-            const statsHtml = `
-                <div class="pokemon-stats">
-                    <p>Type: ${pokemon.type1}${pokemon.type2 ? '/' + pokemon.type2 : ''}</p>
-                    <p>HP: ${pokemon.hp}</p>
-                    <p>Attack: ${pokemon.attack}</p>
-                    <p>Defense: ${pokemon.defense}</p>
-                    <p>Sp. Attack: ${pokemon.sp_attack}</p>
-                    <p>Sp. Defense: ${pokemon.sp_defense}</p>
-                    <p>Speed: ${pokemon.speed}</p>
-                </div>
-            `;
-            d3.select(`#pokemon${pokemonNumber}Stats`).html(statsHtml);
+            // const statsHtml = `
+            //     <div class="pokemon-stats">
+            //         <p>Type: ${pokemon.type1}${pokemon.type2 ? '/' + pokemon.type2 : ''}</p>
+            //         <p>HP: ${pokemon.hp}</p>
+            //         <p>Attack: ${pokemon.attack}</p>
+            //         <p>Defense: ${pokemon.defense}</p>
+            //         <p>Sp. Attack: ${pokemon.sp_attack}</p>
+            //         <p>Sp. Defense: ${pokemon.sp_defense}</p>
+            //         <p>Speed: ${pokemon.speed}</p>
+            //     </div>
+            // `;
+            // d3.select(`#pokemon${pokemonNumber}Stats`).html(statsHtml);
         } else {
             imgElement.attr("src", "Dataset/images/pokemon_jpg/1.jpg")
                 .attr("alt", "Select a Pokémon");
@@ -524,15 +480,16 @@ document.addEventListener("DOMContentLoaded", function () {
             battleButton.addEventListener('click', calculateWinner);
         }
     }
+
     function calculateWinner() {
         const pokemon1Name = d3.select("#pokemon1").property("value");
         const pokemon2Name = d3.select("#pokemon2").property("value");
-    
+        
         if (!pokemon1Name || !pokemon2Name) {
             d3.select("#winner").html("<h3>Select two Pokémon to battle!</h3>");
             return;
         }
-    
+        
         if (pokemon1Name === pokemon2Name) {
             d3.select("#winner").html("<h3>Please select different Pokémon!</h3>");
             return;
@@ -542,17 +499,328 @@ document.addEventListener("DOMContentLoaded", function () {
             (r.name_first === pokemon1Name && r.name_second === pokemon2Name) ||
             (r.name_first === pokemon2Name && r.name_second === pokemon1Name)
         );
+
+        const pokemon1 = pokemonStats.find(p => p.name === pokemon1Name);
+        const pokemon2 = pokemonStats.find(p => p.name === pokemon2Name);
+        // console.log(pokemon1)
+        // console.log(pokemon2)
+
+        const stats1 = [pokemon1.hp, pokemon1.attack, pokemon1.defense, pokemon1.sp_attack, pokemon1.sp_defense, pokemon1.speed];
+        const stats2 = [pokemon2.hp, pokemon2.attack, pokemon2.defense, pokemon2.sp_attack, pokemon2.sp_defense, pokemon2.speed];
+        // console.log(stats1)
+        // console.log(stats2)
+
     
         if (result) {
             const winner = pokemonStats.find(p => p.name === result.winner_name);
             d3.select("#winner")
                 .html(`
                     <h3>Winner: ${result.winner_name}!</h3>
-                    <p>Type: ${winner.type1}${winner.type2 ? '/' + winner.type2 : ''}</p>
-                    <p>Base Stats Total: ${winner.base_total}</p>
                 `);
+                // .html(`
+                //     <h3>Winner: ${result.winner_name}!</h3>
+                //     <p>Base Stats Total: ${winner.base_total}</p>
+                // `);
         } else {
-            d3.select("#winner").html("<h3>No battle data available for these Pokémon</h3>");
+            // d3.select("#winner").html("<h3>No battle data available for these Pokémon</h3>");
+            const sumStats1 = stats1.reduce((sum, stat) => sum + parseInt(stat), 0);
+            const sumStats2 = stats2.reduce((sum, stat) => sum + parseInt(stat), 0);
+            let winnerName, winnerTotal;
+            if (sumStats1 > sumStats2) {
+                winnerName = pokemon1Name;
+                winnerTotal = sumStats1;
+            } else if (sumStats2 > sumStats1) {
+                winnerName = pokemon2Name;
+                winnerTotal = sumStats2;
+            } else {
+                winnerName = "It's a tie!";
+                winnerTotal = sumStats1;
+            }
+
+            // d3.select("#winner")
+            //     .html(`
+            //         <h3>Winner: ${winnerName}!</h3>
+            //         <p>Base Stats Total: ${winnerTotal}</p>
+            //     `);
+            d3.select("#winner")
+                .html(`
+                    <h3>Winner: ${winnerName}!</h3>
+                `);
         }
+        
+    
+        // Create battle visualization container
+        const battleContainer = d3.select(".battle-container");
+        let visualizationDiv = battleContainer.select("#battleVisualizations");
+        
+        if (visualizationDiv.empty()) {
+            visualizationDiv = battleContainer.append("div")
+                .attr("id", "battleVisualizations")
+                .attr("class", "battle-visualizations");
+        }
+
+        visualizationDiv.html(`
+            <div class="battle-charts">
+                <div id="barChart"></div>
+                <div id="lineChart"></div>
+            </div>
+        `);
+
+        const statsLabels = ["HP", "Attack", "Defense", "Sp. Attack", "Sp. Defense", "Speed"];
+        
+       
+        createBarChart(statsLabels, stats1, stats2, pokemon1Name, pokemon2Name);
+        createLineChart(statsLabels, stats1, stats2, pokemon1Name, pokemon2Name);
+
+    }
+
+    function createBarChart(labels, stats1, stats2, pokemon1Name, pokemon2Name) {
+        d3.select("#barChart").html("");
+    
+        const margin = { top: 40, right: 40, bottom: 60, left: 60 };
+        const width = 600 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+    
+        const svg = d3.select("#barChart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+    
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", -20)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("font-weight", "bold")
+            .text("Stats Comparison (Bar Chart)");
+    
+        const x = d3.scaleBand()
+            .range([0, width])
+            .domain(labels)
+            .padding(0.2);
+    
+        const y = d3.scaleLinear()
+            .domain([0, Math.max(...stats1, ...stats2)])
+            .range([height, 0]);
+    
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-45)");
+    
+        svg.append("g")
+            .call(d3.axisLeft(y));
+    
+        svg.selectAll(".bar1")
+            .data(stats1)
+            .enter()
+            .append("rect")
+            .attr("class", "bar1")
+            .attr("x", (d, i) => x(labels[i]))
+            .attr("width", x.bandwidth() / 2)
+            .attr("y", height)  // Start at the bottom (height)
+            .attr("height", 0)  // Start with 0 height
+            .attr("fill", "#FF4136")
+            .attr("opacity", 0.7)
+            .transition()  // Add transition
+            .duration(1000)  // Duration of animation
+            .attr("y", d => y(d))  // Animate to the correct y position
+            .attr("height", d => height - y(d));  // Animate the height
+
+        svg.selectAll(".bar2")
+            .data(stats2)
+            .enter()
+            .append("rect")
+            .attr("class", "bar2")
+            .attr("x", (d, i) => x(labels[i]) + x.bandwidth() / 2)
+            .attr("width", x.bandwidth() / 2)
+            .attr("y", height)  // Start at the bottom (height)
+            .attr("height", 0)  // Start with 0 height
+            .attr("fill", "#0074D9")
+            .attr("opacity", 0.7)
+            .transition()  // Add transition
+            .duration(1000)  // Duration of animation
+            .attr("y", d => y(d))  // Animate to the correct y position
+            .attr("height", d => height - y(d));  // Animate the height
+    
+        const legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${width - 100}, 0)`);
+    
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", "#FF4136")
+            .style("opacity", 0.7);
+    
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", 25)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", "#0074D9")
+            .style("opacity", 0.7);
+    
+        legend.append("text")
+            .attr("x", 25)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "start")
+            .text(pokemon1Name);
+    
+        legend.append("text")
+            .attr("x", 25)
+            .attr("y", 34)
+            .attr("dy", ".35em")
+            .style("text-anchor", "start")
+            .text(pokemon2Name);
+    }
+    
+    function createLineChart(labels, stats1, stats2, pokemon1Name, pokemon2Name) {
+        d3.select("#lineChart").html("");
+    
+        const margin = { top: 40, right: 40, bottom: 60, left: 60 };
+        const width = 600 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+    
+        const svg = d3.select("#lineChart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+    
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", -20)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("font-weight", "bold")
+            .text("Stats Comparison (Line Chart)");
+    
+        const x = d3.scalePoint()
+            .range([0, width])
+            .domain(labels);
+    
+        const y = d3.scaleLinear()
+            .domain([0, Math.max(...stats1, ...stats2)])
+            .range([height, 0]);
+    
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-45)");
+    
+        svg.append("g")
+            .call(d3.axisLeft(y));
+    
+        const line = d3.line()
+            .x((d, i) => x(labels[i]))
+            .y(d => y(d));
+    
+        svg.append("path")
+            .datum(stats1)
+            .attr("fill", "none")
+            .attr("stroke", "#FF4136")
+            .attr("stroke-width", 2)
+            .attr("d", line)
+            .attr("stroke-dasharray", function() {
+                return this.getTotalLength();
+            })  // Initially, path is not drawn
+            .attr("stroke-dashoffset", function() {
+                return this.getTotalLength();
+            })  // Set the dash offset to the length of the path
+            .transition()
+            .duration(1000)
+            .attr("stroke-dashoffset", 0);  // Draw the path by animating the dash offset to 0
+    
+        svg.append("path")
+            .datum(stats2)
+            .attr("fill", "none")
+            .attr("stroke", "#0074D9")
+            .attr("stroke-width", 2)
+            .attr("d", line)
+            .attr("stroke-dasharray", function() {
+                return this.getTotalLength();
+            })  // Initially, path is not drawn
+            .attr("stroke-dashoffset", function() {
+                return this.getTotalLength();
+            })  // Set the dash offset to the length of the path
+            .transition()
+            .duration(1000)
+            .attr("stroke-dashoffset", 0);
+    
+        svg.selectAll(".dot1")
+            .data(stats1)
+            .enter()
+            .append("circle")
+            .attr("class", "dot1")
+            .attr("cx", (d, i) => x(labels[i]))
+            .attr("cy", d => y(d))
+            .attr("r", 5)
+            .attr("fill", "#FF4136")
+            .attr("opacity", 0)
+            .transition()
+            .duration(1000)
+            .attr("opacity", 1);  // Fade in the dots with a transition
+    
+        svg.selectAll(".dot2")
+            .data(stats2)
+            .enter()
+            .append("circle")
+            .attr("class", "dot2")
+            .attr("cx", (d, i) => x(labels[i]))
+            .attr("cy", d => y(d))
+            .attr("r", 5)
+            .attr("fill", "#0074D9")
+            .attr("opacity", 0)
+            .transition()
+            .duration(1000)
+            .attr("opacity", 1);  // Fade in the dots with a transition
+    
+        const legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${width - 100}, 0)`);
+    
+        legend.append("line")
+            .attr("x1", 0)
+            .attr("x2", 18)
+            .attr("y1", 9)
+            .attr("y2", 9)
+            .style("stroke", "#FF4136")
+            .style("stroke-width", 2);
+    
+        legend.append("line")
+            .attr("x1", 0)
+            .attr("x2", 18)
+            .attr("y1", 34)
+            .attr("y2", 34)
+            .style("stroke", "#0074D9")
+            .style("stroke-width", 2);
+    
+        legend.append("text")
+            .attr("x", 25)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "start")
+            .text(pokemon1Name);
+    
+        legend.append("text")
+            .attr("x", 25)
+            .attr("y", 34)
+            .attr("dy", ".35em")
+            .style("text-anchor", "start")
+            .text(pokemon2Name);
     }
 });
