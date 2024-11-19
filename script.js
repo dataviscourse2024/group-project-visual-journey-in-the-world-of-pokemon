@@ -467,7 +467,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // `;
             // d3.select(`#pokemon${pokemonNumber}Stats`).html(statsHtml);
         } else {
-            imgElement.attr("src", "Dataset/images/pokemon_jpg/1.jpg")
+            imgElement.attr("src", "Dataset/images/pokemon_jpg/Pokeball.jpg")
                 .attr("alt", "Select a Pokémon");
             d3.select(`#pokemon${pokemonNumber}Stats`).html("");
         }
