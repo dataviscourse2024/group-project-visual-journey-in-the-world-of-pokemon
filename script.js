@@ -105,6 +105,41 @@ document.addEventListener("DOMContentLoaded", function () {
         "pokemonImage"
       ).src = `Dataset/images/pokemon_jpg/${pokemon.image_filename}`;
       document.getElementById("pokemonImage").style.display = "block";
+
+      let genderDisplay = '';
+        if (pokemon.percentage_male === "100") {
+            genderDisplay = '<span class="gender-symbol">♂</span>';
+        } else if (pokemon.percentage_male === "0") {
+            genderDisplay = '<span class="gender-symbol">♀</span>';
+        } else {
+            genderDisplay = '<span class="gender-symbol">♂</span><span class="gender-symbol">♀</span>';
+        }
+        
+      const statsHtml = `
+            <div class="pokemon-info-grid">
+                <div class="info-row">
+                    <div class="info-label">Height</div>
+                    <div class="info-value">${pokemon.height_m}'</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Weight</div>
+                    <div class="info-value">${pokemon.weight_kg} KG</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Gender</div>
+                    <div class="info-value">${genderDisplay}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Category</div>
+                    <div class="info-value">${pokemon.category || 'Unknown'}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Abilities</div>
+                    <div class="info-value">${pokemon.abilities || 'Unknown'}</div>
+                </div>
+            </div>
+        `;
+        d3.select("#pokemoncardStats").html(statsHtml);
     } else {
       console.error("Pokémon not found: ", pokemonName);
     }
