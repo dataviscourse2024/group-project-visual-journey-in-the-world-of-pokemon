@@ -473,7 +473,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
-
     function initializeBattleButton() {
         const battleButton = document.getElementById('battleButton');
         if (battleButton) {
@@ -823,4 +822,235 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("text-anchor", "start")
             .text(pokemon2Name);
     }
+
+    //Section-3
+    function createEffectivenessMatrix(typeEffectivenessData) {
+        // Clear any existing SVG
+        d3.select("#typeEffectiveness").selectAll("*").remove();
+    
+        const types = [
+            "fire", "water", "grass", "electric", "ice", "fighting", "poison",
+            "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon",
+            "dark", "steel", "fairy"
+        ];
+    
+        // Type-specific colors
+        const typeColors = {
+            fire: "#EE8130",
+            water: "#6390F0",
+            grass: "#7AC74C",
+            electric: "#F7D02C",
+            ice: "#96D9D6",
+            fighting: "#C22E28",
+            poison: "#A33EA1",
+            ground: "#E2BF65",
+            flying: "#A98FF3",
+            psychic: "#F95587",
+            bug: "#A6B91A",
+            rock: "#B6A136",
+            ghost: "#735797",
+            dragon: "#6F35FC",
+            dark: "#705746",
+            steel: "#B7B7CE",
+            fairy: "#D685AD"
+        };
+    
+        // Set up dimensions with more space for labels
+        const margin = { top: 140, right: 150, bottom: 100, left: 140 };
+        const width = 800 - margin.left - margin.right;
+        const height = 800 - margin.top - margin.bottom;
+    
+        // Create SVG container with viewBox for responsiveness
+        const svg = d3.select("#typeEffectiveness")
+            .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+    
+        // Create scales
+        const x = d3.scaleBand()
+            .domain(types)
+            .range([0, width])
+            .padding(0.05);
+    
+        const y = d3.scaleBand()
+            .domain(types)
+            .range([0, height])
+            .padding(0.05);
+    
+        // Create color scale for effectiveness
+        // const effectivenessColorScale = d3.scaleOrdinal()
+        //     .domain([0, 0.5, 1, 2])
+        //     .range(["#444444", "#ff6b6b", "#ffffff", "#4ecdc4"]);
+
+        const effectivenessColorScale = (value) => {
+            if (value >= 2) return "#4ecdc4";  // Super Effective (2×-4×)
+            if (value === 1) return "#ffffff";  // Normal (1×)
+            if (value > 0 && value <= 0.5) return "#ff6b6b";  // Not Very Effective (0.25×-0.5×)
+            return "#444444";  // No Effect (0×)
+        };
+    
+        // Add title
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", -100)
+            .attr("text-anchor", "middle")
+            .style("font-size", "24px")
+            .style("font-weight", "bold")
+            .text("Pokémon Type Effectiveness Matrix");
+    
+        // Add x-axis labels at the top with colored boxes
+        const xLabels = svg.append("g")
+            .selectAll(".xLabel")
+            .data(types)
+            .enter()
+            .append("g")
+            .attr("transform", d => `translate(${x(d) + x.bandwidth() / 2}, ${-25}) rotate(-45)`);
+    
+        // Add colored rectangles for x-axis
+        xLabels.append("rect")
+            .attr("x", -20)
+            .attr("y", -10)
+            .attr("width", 50)
+            .attr("height", 20)
+            .attr("fill", d => typeColors[d])
+            .attr("rx", 4)  // Rounded corners
+            .attr("ry", 4); // Rounded corners
+    
+        // Add text for x-axis
+        xLabels.append("text")
+            .attr("class", "xLabel")
+            .attr("text-anchor", "middle")
+            .attr("x", 0)
+            .attr("y", 5)
+            .text(d => d.charAt(0).toUpperCase() + d.slice(1))
+            .style("font-size", "12px")
+            .style("fill", "white")
+            .style("font-weight", "bold");
+    
+        // Add y-axis labels with colored boxes
+        const yLabels = svg.append("g")
+            .selectAll(".yLabel")
+            .data(types)
+            .enter()
+            .append("g")
+            .attr("transform", d => `translate(0, ${y(d) + y.bandwidth() / 2})`);
+    
+        // Add colored rectangles for y-axis
+        yLabels.append("rect")
+            .attr("x", -100)
+            .attr("y", -10)
+            .attr("width", 80)
+            .attr("height", 20)
+            .attr("fill", d => typeColors[d])
+            .attr("rx", 4) 
+            .attr("ry", 4); 
+    
+        yLabels.append("text")
+            .attr("class", "yLabel")
+            .attr("text-anchor", "middle")
+            .attr("x", -60)
+            .attr("y", 5)
+            .text(d => d.charAt(0).toUpperCase() + d.slice(1))
+            .style("font-size", "12px")
+            .style("fill", "white")
+            .style("font-weight", "bold");
+    
+        const cells = svg.selectAll(".cell")
+            .data(types.flatMap(attackType => 
+                types.map(defenseType => ({
+                    attacker: attackType,
+                    defender: defenseType,
+                    effectiveness: typeEffectivenessData[attackType][defenseType]
+                }))
+            ))
+            .enter()
+            .append("g")
+            .attr("class", "cell");
+    
+        cells.append("rect")
+            .attr("x", d => x(d.attacker))
+            .attr("y", d => y(d.defender))
+            .attr("width", x.bandwidth())
+            .attr("height", y.bandwidth())
+            .attr("fill", d => effectivenessColorScale(d.effectiveness))
+            .attr("stroke", "#ccc")
+            .attr("stroke-width", 1);
+    
+        cells.append("text")
+            .attr("x", d => x(d.attacker) + x.bandwidth() / 2)
+            .attr("y", d => y(d.defender) + y.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "middle")
+            .style("font-size", "11px")
+            .style("fill", d => {
+                if (d.effectiveness === 0) return "#ffffff";
+                return d.effectiveness >= 2 ? "white" : "black";
+            })
+            .text(d => d.effectiveness === 1 ? "" : d.effectiveness);
+    
+        const legendData = [
+            { value: 2, text: "Super Effective (2×-4×)", color: "#4ecdc4" },
+            { value: 1, text: "Normal (1×)", color: "#ffffff" },
+            { value: 0.5, text: "Not Very Effective (0.25×-0.5×)", color: "#ff6b6b" },
+            { value: 0, text: "No Effect (0×)", color: "#444444" }
+        ];
+    
+        const legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${width + 20}, 0)`);
+    
+        const legendItems = legend.selectAll(".legendItem")
+            .data(legendData)
+            .enter()
+            .append("g")
+            .attr("class", "legendItem")
+            .attr("transform", (d, i) => `translate(0, ${i * 25})`);
+    
+        legendItems.append("rect")
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", d => d.color)
+            .attr("stroke", "#ccc")
+            .attr("stroke-width", 1);
+    
+        legendItems.append("text")
+            .attr("x", 30)
+            .attr("y", 15)
+            .text(d => d.text)
+            .style("font-size", "12px");
+    
+        svg.append("text")
+            .attr("x", -height/2)
+            .attr("y", -margin.left + 30)
+            .attr("transform", "rotate(-90)")
+            .style("text-anchor", "middle")
+            .style("font-size", "14px")
+            .style("font-weight", "bold")
+            .text("Defending Type");
+    
+        svg.append("text")
+            .attr("x", width/2)
+            .attr("y", -60)
+            .style("text-anchor", "middle")
+            .style("font-size", "14px")
+            .style("font-weight", "bold")
+            .text("Attacking Type");
+    }
+    
+    d3.json("/dataset/Preprocessed/type_effectiveness.json").then(function(data) {
+            createEffectivenessMatrix(data);
+        })
+
+    window.addEventListener('resize', () => {
+        d3.json("/dataset/Preprocessed/type_effectiveness.json")
+            .then(function(data) {
+                createEffectivenessMatrix(data);
+            })
+            .catch(function(error) {
+                console.error("Error loading the data:", error);
+            });
+    });
+    
 });
