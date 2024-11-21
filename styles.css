@@ -213,6 +213,10 @@ main {
   background-color: #dee2e6;
 }
 
+#section3 .container{
+  height:100vh;
+}
+
 html {
   scroll-behavior: smooth;
   height: 100%;

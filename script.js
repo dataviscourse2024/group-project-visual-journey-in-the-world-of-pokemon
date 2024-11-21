@@ -1224,10 +1224,10 @@ function createEffectivenessMatrix(typeEffectivenessData) {
         .text(d => d.effectiveness === 1 ? "" : d.effectiveness);
 
     const legendData = [
-        { value: 2, text: "Super Effective (2×-4×)", color: "#4ecdc4" },
-        { value: 1, text: "Normal (1×)", color: "#ffffff" },
-        { value: 0.5, text: "Not Very Effective (0.25×-0.5×)", color: "#ff6b6b" },
-        { value: 0, text: "No Effect (0×)", color: "#444444" }
+        { value: 2, text: "Super Effective", color: "#4ecdc4" },
+        { value: 1, text: "Normal", color: "#ffffff" },
+        { value: 0.5, text: "Not Very Effective", color: "#ff6b6b" },
+        { value: 0, text: "No Effect", color: "#444444" }
     ];
 
     const legend = svg.append("g")
