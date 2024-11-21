@@ -302,15 +302,15 @@ html {
 
 .pokemon-info-grid {
   display: grid;
-  gap: 10px;
+  gap: 5px;
   width: 100%;
 }
 
 .info-row {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 20px;
-  padding: 10px;
+  gap: 10px;
+  padding: 5px;
   align-items: center;
   border-bottom: 1px solid #dee2e6;
 }
@@ -323,8 +323,4 @@ html {
 .info-value {
   text-align: right;
   color: #666;
-}
-
-.gender-symbol {
-  margin: 0 3px;
 }

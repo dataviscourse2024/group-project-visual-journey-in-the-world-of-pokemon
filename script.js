@@ -113,93 +113,163 @@ document.addEventListener("DOMContentLoaded", function () {
             </thead>
             <tbody>`;
 
+    function filterByGeneration(generation) {
+      const filteredData =
+        generation === "all"
+          ? pokemonStats
+          : pokemonStats.filter((p) => p.generation === generation);
+      updateTable(filteredData);
+    }
     // Type colors mapping
     const typeColors = {
-        fire: { main: "#EE8130", light: "#ff9d57" },
-        water: { main: "#6390F0", light: "#89aeff" },
-        grass: { main: "#7AC74C", light: "#98e670" },
-        electric: { main: "#F7D02C", light: "#ffe056" },
-        ice: { main: "#96D9D6", light: "#b8ecea" },
-        fighting: { main: "#C22E28", light: "#e54a43" },
-        poison: { main: "#A33EA1", light: "#c655c4" },
-        ground: { main: "#E2BF65", light: "#f5d989" },
-        flying: { main: "#A98FF3", light: "#c4b2ff" },
-        psychic: { main: "#F95587", light: "#ff7ca6" },
-        bug: { main: "#A6B91A", light: "#c5db2d" },
-        rock: { main: "#B6A136", light: "#d4bc45" },
-        ghost: { main: "#735797", light: "#9173b5" },
-        dragon: { main: "#6F35FC", light: "#915aff" },
-        dark: { main: "#705746", light: "#8f735f" },
-        steel: { main: "#B7B7CE", light: "#d6d6e7" },
-        fairy: { main: "#D685AD", light: "#ffa7cf" },
-        normal: { main: "#A8A878", light: "#c1cba7" }
+      fire: { main: "#EE8130", light: "#ff9d57" },
+      water: { main: "#6390F0", light: "#89aeff" },
+      grass: { main: "#7AC74C", light: "#98e670" },
+      electric: { main: "#F7D02C", light: "#ffe056" },
+      ice: { main: "#96D9D6", light: "#b8ecea" },
+      fighting: { main: "#C22E28", light: "#e54a43" },
+      poison: { main: "#A33EA1", light: "#c655c4" },
+      ground: { main: "#E2BF65", light: "#f5d989" },
+      flying: { main: "#A98FF3", light: "#c4b2ff" },
+      psychic: { main: "#F95587", light: "#ff7ca6" },
+      bug: { main: "#A6B91A", light: "#c5db2d" },
+      rock: { main: "#B6A136", light: "#d4bc45" },
+      ghost: { main: "#735797", light: "#9173b5" },
+      dragon: { main: "#6F35FC", light: "#915aff" },
+      dark: { main: "#705746", light: "#8f735f" },
+      steel: { main: "#B7B7CE", light: "#d6d6e7" },
+      fairy: { main: "#D685AD", light: "#ffa7cf" },
+      normal: { main: "#A8A878", light: "#c1cba7" },
     };
 
-    pokemonStats.forEach((pokemon, index) => {
-        const type1 = pokemon.type1.toLowerCase(); // Make sure it's in lowercase
+    function updateTable(data) {
+      let statsTable = `<table class="pokemon-stats-table">
+          <thead>
+              <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>HP</th>
+                  <th>Attack</th>
+                  <th>Defense</th>
+                  <th>Sp. Attack</th>
+                  <th>Sp. Defense</th>
+                  <th>Speed</th>
+              </tr>
+          </thead>
+          <tbody>`;
+
+      data.forEach((pokemon, index) => {
+        const type1 = pokemon.type1.toLowerCase();
         const type2 = pokemon.type2 ? pokemon.type2.toLowerCase() : null;
 
-        // Determine background colors for type1 and type2
-        const type1Color = typeColors[type1] ? typeColors[type1].main : "#ffffff";
-        const type2Color = type2 && typeColors[type2] ? typeColors[type2].main : "#ffffff";
+        const type1Color = typeColors[type1]
+          ? typeColors[type1].main
+          : "#ffffff";
+        const type2Color =
+          type2 && typeColors[type2] ? typeColors[type2].main : "#ffffff";
 
         statsTable += `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${pokemon.name}</td>
-                <td>
-                    <span style="background-color: ${type1Color}; padding: 2px 8px; border-radius: 5px; color: white;">${pokemon.type1}</span>
-                    ${pokemon.type2 ? 
-                    `<span style="background-color: ${type2Color}; padding: 2px 8px; border-radius: 5px; color: white; margin-left: 5px;">${pokemon.type2}</span>` 
-                    : ""}
-                </td>
-                <td>${pokemon.hp}</td>
-                <td>${pokemon.attack}</td>
-                <td>${pokemon.defense}</td>
-                <td>${pokemon.sp_attack}</td>
-                <td>${pokemon.sp_defense}</td>
-                <td>${pokemon.speed}</td>
-            </tr>
-        `;
-    });
-
-    statsTable += `</tbody></table>`;
-
-    d3.select("#allPokemonStats").html(statsTable);
-
-    // Hover effects
-    const rows = d3.selectAll(".pokemon-stats-table tbody tr");
-    rows
-      .on("mouseover", function () {
-        d3.select(this).style("background-color", "#ff6347");
-      })
-      .on("mouseout", function () {
-        d3.select(this).style("background-color", null);
+              <tr>
+                  <td>${index + 1}</td>
+                  <td>${pokemon.name}</td>
+                  <td>
+                      <span style="background-color: ${type1Color}; padding: 2px 8px; border-radius: 5px; color: white;">${
+          pokemon.type1
+        }</span>
+                      ${
+                        pokemon.type2
+                          ? `<span style="background-color: ${type2Color}; padding: 2px 8px; border-radius: 5px; color: white; margin-left: 5px;">${pokemon.type2}</span>`
+                          : ""
+                      }
+                  </td>
+                  <td>${pokemon.hp}</td>
+                  <td>${pokemon.attack}</td>
+                  <td>${pokemon.defense}</td>
+                  <td>${pokemon.sp_attack}</td>
+                  <td>${pokemon.sp_defense}</td>
+                  <td>${pokemon.speed}</td>
+              </tr>
+          `;
       });
 
-    rows.on("click", function (event) {
-      rows.classed("selected", false);
-      d3.select(this).classed("selected", true);
+      statsTable += `</tbody></table>`;
+      d3.select("#allPokemonStats").html(statsTable);
+
+      // Reattach event listeners
+      attachTableEventListeners();
+    }
+    // pokemonStats.forEach((pokemon, index) => {
+    //   const type1 = pokemon.type1.toLowerCase(); // Make sure it's in lowercase
+    //   const type2 = pokemon.type2 ? pokemon.type2.toLowerCase() : null;
+
+    //   // Determine background colors for type1 and type2
+    //   const type1Color = typeColors[type1] ? typeColors[type1].main : "#ffffff";
+    //   const type2Color =
+    //     type2 && typeColors[type2] ? typeColors[type2].main : "#ffffff";
+
+    //   statsTable += `
+    //         <tr>
+    //             <td>${index + 1}</td>
+    //             <td>${pokemon.name}</td>
+    //             <td>
+    //                 <span style="background-color: ${type1Color}; padding: 2px 8px; border-radius: 5px; color: white;">${
+    //     pokemon.type1
+    //   }</span>
+    //                 ${
+    //                   pokemon.type2
+    //                     ? `<span style="background-color: ${type2Color}; padding: 2px 8px; border-radius: 5px; color: white; margin-left: 5px;">${pokemon.type2}</span>`
+    //                     : ""
+    //                 }
+    //             </td>
+    //             <td>${pokemon.hp}</td>
+    //             <td>${pokemon.attack}</td>
+    //             <td>${pokemon.defense}</td>
+    //             <td>${pokemon.sp_attack}</td>
+    //             <td>${pokemon.sp_defense}</td>
+    //             <td>${pokemon.speed}</td>
+    //         </tr>
+    //     `;
+    // });
+
+    // statsTable += `</tbody></table>`;
+
+    // d3.select("#allPokemonStats").html(statsTable);
+
+    // Hover effects
+    function attachTableEventListeners() {
+      const rows = d3.selectAll(".pokemon-stats-table tbody tr");
+      rows
+        .on("mouseover", function () {
+          d3.select(this).style("background-color", "#ff6347");
+        })
+        .on("mouseout", function () {
+          d3.select(this).style("background-color", null);
+        })
+        .on("click", function (event) {
+          rows.classed("selected", false);
+          d3.select(this).classed("selected", true);
+        });
+
+      // Table click handler for visualization
+      d3.select("#allPokemonStats").on("click", function (event) {
+        const target = d3.select(event.target);
+        if (target.node().tagName === "TD") {
+          const row = target.node().parentNode;
+          const pokemonName = row.cells[1].textContent;
+          d3.select(".stats-card").style("display", "block");
+          updateVisualization(pokemonName);
+          updateVisualization(pokemonName);
+        }
+      });
+    }
+    updateTable(pokemonStats);
+
+    d3.select("#generationFilter").on("change", function () {
+      const selectedGeneration = this.value;
+      filterByGeneration(selectedGeneration);
     });
-
-    // On click on table - show visualization on right
-    d3.select("#allPokemonStats").on("click", function (event) {
-      const target = d3.select(event.target);
-
-      if (target.node().tagName === "TD") {
-        const row = target.node().parentNode;
-        const pokemonName = row.cells[1].textContent; // pokemon name is 2nd column
-
-        // Show the stats card
-        d3.select(".stats-card").style("display", "block");
-
-        // Update visualizations
-        updateVisualization(pokemonName);
-        updateVisualization(pokemonName);
-      }
-    });
-}
-
+  }
 
   function updateVisualization(pokemonName) {
     const pokemon = pokemonStats.find((p) => p.name === pokemonName);
@@ -208,19 +278,10 @@ document.addEventListener("DOMContentLoaded", function () {
       renderBoxPlot(pokemon);
       document.getElementById(
         "pokemonImage"
-      ).src = `Dataset/images/pokemon_jpg/${pokemon.image_filename}`;
+      ).src = `Dataset/images/pokemon/${pokemon.image_filename}`;
       document.getElementById("pokemonImage").style.display = "block";
 
-      let genderDisplay = '';
-        if (pokemon.percentage_male === "100") {
-            genderDisplay = '<span class="gender-symbol">♂</span>';
-        } else if (pokemon.percentage_male === "0") {
-            genderDisplay = '<span class="gender-symbol">♀</span>';
-        } else {
-            genderDisplay = '<span class="gender-symbol">♂</span><span class="gender-symbol">♀</span>';
-        }
-      
-      console.log(pokemon.abilities)
+      console.log(pokemon.abilities);
       const statsHtml = `
             <div class="pokemon-info-grid">
                 <div class="info-row">
@@ -232,28 +293,35 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="info-value">${pokemon.weight_kg} KG</div>
                 </div>
                 <div class="info-row">
-                    <div class="info-label">Gender</div>
-                    <div class="info-value">${genderDisplay}</div>
-                </div>
-                <div class="info-row">
                     <div class="info-label">Category</div>
-                    <div class="info-value">${pokemon.category || 'Unknown'}</div>
+                    <div class="info-value">${
+                      pokemon.category || "Unknown"
+                    }</div>
                 </div>
                 <div class="info-row">
                     <div class="info-label">Abilities</div>
                     <div class="info-value">
-                        ${pokemon.abilities
+                        ${
+                          pokemon.abilities
                             ? pokemon.abilities
-                                .replace(/[\[\]']+/g, '')   
-                                .replace(/\s+/g, '')         
-                                .replace(/,/g, ', ')       
-                            : 'Unknown'}
+                                .replace(/[\[\]']+/g, "")
+                                .replace(/\s+/g, "")
+                                .replace(/,/g, ", ")
+                            : "Unknown"
+                        }
                     </div>
-                    
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Strength</div>
+                    <div class="info-value">${pokemon.weight_kg} KG</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Weakness</div>
+                    <div class="info-value">${pokemon.weight_kg} KG</div>
                 </div>
             </div>
         `;
-        d3.select("#pokemoncardStats").html(statsHtml);
+      d3.select("#pokemoncardStats").html(statsHtml);
     } else {
       console.error("Pokémon not found: ", pokemonName);
     }
@@ -266,44 +334,97 @@ document.addEventListener("DOMContentLoaded", function () {
 
     void boxPlotContainer.node().offsetHeight;
 
-    const containerWidth = boxPlotContainer.node().getBoundingClientRect().width;
-    const containerHeight = boxPlotContainer.node().getBoundingClientRect().height;
+    const containerWidth = boxPlotContainer
+      .node()
+      .getBoundingClientRect().width;
+    const containerHeight = boxPlotContainer
+      .node()
+      .getBoundingClientRect().height;
     const chartSize = Math.min(containerWidth, containerHeight) * 0.95;
 
     const margin = {
-        top: chartSize * 0.1,
-        right: chartSize * 0.05,  // Reduced right margin
-        bottom: chartSize * 0.15, // Increased bottom margin for rotated labels
-        left: chartSize * 0.1
+      top: chartSize * 0.1,
+      right: chartSize * 0.05, // Reduced right margin
+      bottom: chartSize * 0.15, // Increased bottom margin for rotated labels
+      left: chartSize * 0.1,
     };
 
     const width = chartSize - margin.left - margin.right;
     const height = chartSize - margin.top - margin.bottom;
 
     const svg = boxPlotContainer
-        .append("svg")
-        .attr("width", chartSize)
-        .attr("height", chartSize)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+      .append("svg")
+      .attr("width", chartSize)
+      .attr("height", chartSize)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", -margin.top / 2)
-        .attr("text-anchor", "middle")
-        .attr("class", "plot-title")
-        .style("font-size", "16px")
-        .style("font-weight", "bold")
-        .text(`${pokemon.name}'s Stats Distribution`);
+    svg
+      .append("text")
+      .attr("x", width / 2)
+      .attr("y", -margin.top / 2)
+      .attr("text-anchor", "middle")
+      .attr("class", "plot-title")
+      .style("font-size", "16px")
+      .style("font-weight", "bold")
+      .text(`${pokemon.name}'s Stats Distribution`);
 
-        const stats = [
-            { label: "HP", value: pokemon.hp, min: 1, max: 255, q1: 60, median: 90, q3: 110 },
-            { label: "Attack", value: pokemon.attack, min: 5, max: 185, q1: 70, median: 100, q3: 130 },
-            { label: "Defense", value: pokemon.defense, min: 5, max: 230, q1: 60, median: 100, q3: 130 },
-            { label: "Sp. Attack", value: pokemon.sp_attack, min: 10, max: 194, q1: 50, median: 90, q3: 120 },
-            { label: "Sp. Defense", value: pokemon.sp_defense, min: 20, max: 230, q1: 60, median: 100, q3: 130 },
-            { label: "Speed", value: pokemon.speed, min: 5, max: 180, q1: 50, median: 80, q3: 120 }
-        ];
+    const stats = [
+      {
+        label: "HP",
+        value: pokemon.hp,
+        min: 1,
+        max: 255,
+        q1: 60,
+        median: 90,
+        q3: 110,
+      },
+      {
+        label: "Attack",
+        value: pokemon.attack,
+        min: 5,
+        max: 185,
+        q1: 70,
+        median: 100,
+        q3: 130,
+      },
+      {
+        label: "Defense",
+        value: pokemon.defense,
+        min: 5,
+        max: 230,
+        q1: 60,
+        median: 100,
+        q3: 130,
+      },
+      {
+        label: "Sp. Attack",
+        value: pokemon.sp_attack,
+        min: 10,
+        max: 194,
+        q1: 50,
+        median: 90,
+        q3: 120,
+      },
+      {
+        label: "Sp. Defense",
+        value: pokemon.sp_defense,
+        min: 20,
+        max: 230,
+        q1: 60,
+        median: 100,
+        q3: 130,
+      },
+      {
+        label: "Speed",
+        value: pokemon.speed,
+        min: 5,
+        max: 180,
+        q1: 50,
+        median: 80,
+        q3: 120,
+      },
+    ];
 
     const x = d3
       .scaleBand()
@@ -313,16 +434,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const y = d3.scaleLinear().domain([0, 260]).range([height, 0]);
 
-    svg.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x))
-        .style("font-size", "12px")
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-45)")
-        .style("font-weight", "bold");
+    svg
+      .append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .style("font-size", "12px")
+      .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", ".15em")
+      .attr("transform", "rotate(-45)")
+      .style("font-weight", "bold");
 
     svg.append("g").call(d3.axisLeft(y)).style("font-size", "12px");
 
@@ -419,53 +541,57 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const legend = svg
-        .append("g")
-        .attr("class", "legend")
-        .attr("transform", `translate(${width * 0.85}, ${height * 0.1})`);  // Position in top-right corner inside plot
+      .append("g")
+      .attr("class", "legend")
+      .attr("transform", `translate(${width * 0.85}, ${height * 0.1})`); // Position in top-right corner inside plot
 
-    legend.append("circle")
-        .attr("cx", 10)
-        .attr("cy", 10)
-        .attr("r", 6)
-        .attr("fill", "#e74c3c")
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 2);
+    legend
+      .append("circle")
+      .attr("cx", 10)
+      .attr("cy", 10)
+      .attr("r", 6)
+      .attr("fill", "#e74c3c")
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 2);
 
-    legend.append("text")
-        .attr("x", 25)
-        .attr("y", 15)
-        .style("font-size", "12px")
-        .text("Current Value");
+    legend
+      .append("text")
+      .attr("x", 25)
+      .attr("y", 15)
+      .style("font-size", "12px")
+      .text("Current Value");
 
-    legend.append("rect")
-        .attr("x", 5)
-        .attr("y", 30)
-        .attr("width", 10)
-        .attr("height", 10)
-        .attr("fill", "#4ECDC4")
-        .style("opacity", 0.7);
+    legend
+      .append("rect")
+      .attr("x", 5)
+      .attr("y", 30)
+      .attr("width", 10)
+      .attr("height", 10)
+      .attr("fill", "#4ECDC4")
+      .style("opacity", 0.7);
 
-    legend.append("text")
-        .attr("x", 25)
-        .attr("y", 40)
-        .style("font-size", "12px")
-        .text("Stat Range");
+    legend
+      .append("text")
+      .attr("x", 25)
+      .attr("y", 40)
+      .style("font-size", "12px")
+      .text("Stat Range");
   }
 
   // Section 1 - Right (Radar Chart in Cell 3)
   function renderRadarChart(pokemon) {
     if (!pokemon) {
-        console.error("No pokemon data provided");
-        return;
+      console.error("No pokemon data provided");
+      return;
     }
 
     const stats = [
-        { axis: "HP", value: pokemon.hp },
-        { axis: "Attack", value: pokemon.attack },
-        { axis: "Defense", value: pokemon.defense },
-        { axis: "Sp. Atk", value: pokemon.sp_attack },
-        { axis: "Sp. Def", value: pokemon.sp_defense },
-        { axis: "Speed", value: pokemon.speed }
+      { axis: "HP", value: pokemon.hp },
+      { axis: "Attack", value: pokemon.attack },
+      { axis: "Defense", value: pokemon.defense },
+      { axis: "Sp. Atk", value: pokemon.sp_attack },
+      { axis: "Sp. Def", value: pokemon.sp_defense },
+      { axis: "Speed", value: pokemon.speed },
     ];
 
     const chartContainer = d3.select("#pokemonVisualization");
@@ -473,39 +599,40 @@ document.addEventListener("DOMContentLoaded", function () {
     void chartContainer.node().offsetHeight;
 
     const containerWidth = chartContainer.node().getBoundingClientRect().width;
-    const containerHeight = chartContainer.node().getBoundingClientRect().height;
+    const containerHeight = chartContainer
+      .node()
+      .getBoundingClientRect().height;
     const chartSize = Math.min(containerWidth, containerHeight);
-    
 
-    chartContainer.append("h3")
-        .attr("class", "text-center mb-2")
-        .style("font-size", "14px")
-        .text(pokemon.name);
+    chartContainer
+      .append("h3")
+      .attr("class", "text-center mb-2")
+      .style("font-size", "14px")
+      .text(pokemon.name);
 
     RadarChart(chartContainer.node(), [stats], {
-        w: chartSize,
-        h: chartSize,
-        maxValue: 175,
-        levels: 5,
-        color: "#FF0000",
-        margin: chartSize * 0.1  // Dynamic margin based on chart size
+      w: chartSize,
+      h: chartSize,
+      maxValue: 175,
+      levels: 5,
+      color: "#FF0000",
+      margin: chartSize * 0.1, // Dynamic margin based on chart size
     });
-}
+  }
 
   function RadarChart(parentSelector, data, options) {
-
     const container = d3.select(parentSelector);
     const containerWidth = container.node().getBoundingClientRect().width;
     const containerHeight = container.node().getBoundingClientRect().height;
     const defaultSize = Math.min(containerWidth, containerHeight);
 
     const cfg = {
-        w: defaultSize,          // Use container width instead of fixed 300
-        h: defaultSize,          // Use container height instead of fixed 300
-        maxValue: 175,
-        levels: 5,
-        color: "#ff4500",
-        margin: defaultSize * 0.1  // 10% of size for margin
+      w: defaultSize, // Use container width instead of fixed 300
+      h: defaultSize, // Use container height instead of fixed 300
+      maxValue: 175,
+      levels: 5,
+      color: "#ff4500",
+      margin: defaultSize * 0.1, // 10% of size for margin
     };
 
     Object.assign(cfg, options);
@@ -516,22 +643,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const radius = Math.min(cfg.w / 2 - cfg.margin, cfg.h / 2 - cfg.margin);
     const angleSlice = (Math.PI * 2) / total;
 
-    const svg = d3.select(parentSelector)
-        .append("svg")
-        .attr("width", cfg.w)
-        .attr("height", cfg.h)
-        .append("g")
-        .attr("transform", `translate(${cfg.w/2}, ${cfg.h/2})`);
+    const svg = d3
+      .select(parentSelector)
+      .append("svg")
+      .attr("width", cfg.w)
+      .attr("height", cfg.h)
+      .append("g")
+      .attr("transform", `translate(${cfg.w / 2}, ${cfg.h / 2})`);
 
     // const rScale = d3
     //   .scaleLinear()
     //   .range([0, radius])
     //   .domain([0, cfg.maxValue]);
 
-      for (let j = 0; j < cfg.levels; j++) {
-        const levelFactor = radius * ((j + 1) / cfg.levels);
+    for (let j = 0; j < cfg.levels; j++) {
+      const levelFactor = radius * ((j + 1) / cfg.levels);
 
-      svg.selectAll(".levels")
+      svg
+        .selectAll(".levels")
         .data([1])
         .enter()
         .append("circle")
@@ -540,7 +669,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .style("stroke", "#CDCDCD")
         .style("stroke-width", "0.5px");
 
-      svg.append("text")
+      svg
+        .append("text")
         .attr("x", 5)
         .attr("y", -levelFactor)
         .attr("fill", "#737373")
@@ -548,74 +678,86 @@ document.addEventListener("DOMContentLoaded", function () {
         .text((j + 1) * (cfg.maxValue / cfg.levels));
     }
 
-    const axis = svg.selectAll(".axis")
-        .data(allAxis)
-        .enter()
-        .append("g")
-        .attr("class", "axis");
+    const axis = svg
+      .selectAll(".axis")
+      .data(allAxis)
+      .enter()
+      .append("g")
+      .attr("class", "axis");
 
-      axis.append("line")
-        .attr("x1", 0)
-        .attr("y1", 0)
-        .attr("x2", (d, i) => radius * Math.cos(angleSlice * i - Math.PI / 2))
-        .attr("y2", (d, i) => radius * Math.sin(angleSlice * i - Math.PI / 2))
-        .style("stroke", "#CDCDCD")
-        .style("stroke-width", "1px");
+    axis
+      .append("line")
+      .attr("x1", 0)
+      .attr("y1", 0)
+      .attr("x2", (d, i) => radius * Math.cos(angleSlice * i - Math.PI / 2))
+      .attr("y2", (d, i) => radius * Math.sin(angleSlice * i - Math.PI / 2))
+      .style("stroke", "#CDCDCD")
+      .style("stroke-width", "1px");
 
-        axis.append("text")
-        .attr("class", "legend")
-        .style("font-size", "11px")
-        .attr("text-anchor", "middle")
-        .attr("dy", "0.35em")
-        .attr("x", (d, i) => {
-            const x = radius * 1.15 * Math.cos(angleSlice * i - Math.PI / 2);
-            // Adjust label position based on quadrant
-            if (Math.abs(x) < 1) return x + (x < 0 ? -10 : 10);
-            return x;
-        })
-        .attr("y", (d, i) => {
-            const y = radius * 1.15 * Math.sin(angleSlice * i - Math.PI / 2);
-            // Adjust label position based on quadrant
-            if (Math.abs(y) < 1) return y + (y < 0 ? -10 : 10);
-            return y;
-        })
-        .text(d => d);
+    axis
+      .append("text")
+      .attr("class", "legend")
+      .style("font-size", "11px")
+      .attr("text-anchor", "middle")
+      .attr("dy", "0.35em")
+      .attr("x", (d, i) => {
+        const x = radius * 1.15 * Math.cos(angleSlice * i - Math.PI / 2);
+        // Adjust label position based on quadrant
+        if (Math.abs(x) < 1) return x + (x < 0 ? -10 : 10);
+        return x;
+      })
+      .attr("y", (d, i) => {
+        const y = radius * 1.15 * Math.sin(angleSlice * i - Math.PI / 2);
+        // Adjust label position based on quadrant
+        if (Math.abs(y) < 1) return y + (y < 0 ? -10 : 10);
+        return y;
+      })
+      .text((d) => d);
 
-        const dataPoints = data[0].map((d, i) => ({
-            x: radius * (d.value / cfg.maxValue) * Math.cos(angleSlice * i - Math.PI / 2),
-            y: radius * (d.value / cfg.maxValue) * Math.sin(angleSlice * i - Math.PI / 2),
-            value: d.value
-        }));
+    const dataPoints = data[0].map((d, i) => ({
+      x:
+        radius *
+        (d.value / cfg.maxValue) *
+        Math.cos(angleSlice * i - Math.PI / 2),
+      y:
+        radius *
+        (d.value / cfg.maxValue) *
+        Math.sin(angleSlice * i - Math.PI / 2),
+      value: d.value,
+    }));
 
-        const radarLine = d3.lineRadial()
-        .radius(d => d.value)
-        .angle((d, i) => i * angleSlice)
-        .curve(d3.curveLinearClosed);  // Use curveLinearClosed to ensure the path is closed
+    const radarLine = d3
+      .lineRadial()
+      .radius((d) => d.value)
+      .angle((d, i) => i * angleSlice)
+      .curve(d3.curveLinearClosed); // Use curveLinearClosed to ensure the path is closed
 
     // Convert data for the radar line
-    const scaledData = data[0].map(d => ({
-        value: (radius * d.value) / cfg.maxValue
+    const scaledData = data[0].map((d) => ({
+      value: (radius * d.value) / cfg.maxValue,
     }));
 
     // Add the radar area
-    svg.append("path")
-        .datum(scaledData)
-        .attr("d", radarLine)
-        .style("fill", cfg.color)
-        .style("fill-opacity", 0.3)
-        .style("stroke", cfg.color)
-        .style("stroke-width", "2px");
+    svg
+      .append("path")
+      .datum(scaledData)
+      .attr("d", radarLine)
+      .style("fill", cfg.color)
+      .style("fill-opacity", 0.3)
+      .style("stroke", cfg.color)
+      .style("stroke-width", "2px");
 
     // Add dots at each data point
-    svg.selectAll(".dot")
-        .data(dataPoints)
-        .enter()
-        .append("circle")
-        .attr("class", "dot")
-        .attr("r", 4)
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y)
-        .style("fill", cfg.color);
+    svg
+      .selectAll(".dot")
+      .data(dataPoints)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("r", 4)
+      .attr("cx", (d) => d.x)
+      .attr("cy", (d) => d.y)
+      .style("fill", cfg.color);
 
     // Add value labels
     // svg.selectAll(".value-label")
@@ -628,7 +770,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //     .style("font-size", "10px")
     //     .style("fill", "#333")
     //     .text(d => d.value);
-}
+  }
 
   //section 2 - Battle Arena
   function initializeInterface() {
@@ -678,8 +820,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const pokemon = pokemonStats.find((p) => p.name === selectedName);
     const imgElement = d3.select(`#${imageId}`);
 
-    if (pokemon && pokemon.image_exists === "True") {
-      const imagePath = `Dataset/images/pokemon_jpg/${pokemon.image_filename}`;
+    if (pokemon && pokemon.image_exists === "TRUE") {
+      const imagePath = `Dataset/images/pokemon/${pokemon.image_filename}`;
+      console.log(imagePath);
       imgElement.attr("src", imagePath).attr("alt", `${pokemon.name} image`);
 
       // const statsHtml = `
@@ -1087,317 +1230,351 @@ document.addEventListener("DOMContentLoaded", function () {
       .text(pokemon2Name);
   }
 
-
-function createEffectivenessMatrix(typeEffectivenessData) {
+  function createEffectivenessMatrix(typeEffectivenessData) {
     d3.select("#typeEffectiveness").selectAll("*").remove();
 
     const types = [
-        "fire", "water", "grass", "electric", "ice", "fighting", "poison",
-        "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon",
-        "dark", "steel", "fairy"
+      "fire",
+      "water",
+      "grass",
+      "electric",
+      "ice",
+      "fighting",
+      "poison",
+      "ground",
+      "flying",
+      "psychic",
+      "bug",
+      "rock",
+      "ghost",
+      "dragon",
+      "dark",
+      "steel",
+      "fairy",
     ];
 
     const abbreviateType = (type) => {
-        return type.slice(0, 3).toUpperCase();
+      return type.slice(0, 3).toUpperCase();
     };
 
     const typeColors = {
-        fire: { main: "#EE8130", light: "#ff9d57" },
-        water: { main: "#6390F0", light: "#89aeff" },
-        grass: { main: "#7AC74C", light: "#98e670" },
-        electric: { main: "#F7D02C", light: "#ffe056" },
-        ice: { main: "#96D9D6", light: "#b8ecea" },
-        fighting: { main: "#C22E28", light: "#e54a43" },
-        poison: { main: "#A33EA1", light: "#c655c4" },
-        ground: { main: "#E2BF65", light: "#f5d989" },
-        flying: { main: "#A98FF3", light: "#c4b2ff" },
-        psychic: { main: "#F95587", light: "#ff7ca6" },
-        bug: { main: "#A6B91A", light: "#c5db2d" },
-        rock: { main: "#B6A136", light: "#d4bc45" },
-        ghost: { main: "#735797", light: "#9173b5" },
-        dragon: { main: "#6F35FC", light: "#915aff" },
-        dark: { main: "#705746", light: "#8f735f" },
-        steel: { main: "#B7B7CE", light: "#d6d6e7" },
-        fairy: { main: "#D685AD", light: "#ffa7cf" }
+      fire: { main: "#EE8130", light: "#ff9d57" },
+      water: { main: "#6390F0", light: "#89aeff" },
+      grass: { main: "#7AC74C", light: "#98e670" },
+      electric: { main: "#F7D02C", light: "#ffe056" },
+      ice: { main: "#96D9D6", light: "#b8ecea" },
+      fighting: { main: "#C22E28", light: "#e54a43" },
+      poison: { main: "#A33EA1", light: "#c655c4" },
+      ground: { main: "#E2BF65", light: "#f5d989" },
+      flying: { main: "#A98FF3", light: "#c4b2ff" },
+      psychic: { main: "#F95587", light: "#ff7ca6" },
+      bug: { main: "#A6B91A", light: "#c5db2d" },
+      rock: { main: "#B6A136", light: "#d4bc45" },
+      ghost: { main: "#735797", light: "#9173b5" },
+      dragon: { main: "#6F35FC", light: "#915aff" },
+      dark: { main: "#705746", light: "#8f735f" },
+      steel: { main: "#B7B7CE", light: "#d6d6e7" },
+      fairy: { main: "#D685AD", light: "#ffa7cf" },
     };
 
     const margin = { top: 120, right: 150, bottom: 100, left: 140 };
     const width = 800 - margin.left - margin.right;
     const height = 800 - margin.top - margin.bottom;
 
-    const tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0)
-        .style("position", "absolute")
-        .style("background-color", "white")
-        .style("border", "1px solid #ddd")
-        .style("border-radius", "4px")
-        .style("padding", "10px")
-        .style("pointer-events", "none")
-        .style("box-shadow", "0 2px 4px rgba(0,0,0,0.2)")
-        .style("font-size", "14px");
+    const tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0)
+      .style("position", "absolute")
+      .style("background-color", "white")
+      .style("border", "1px solid #ddd")
+      .style("border-radius", "4px")
+      .style("padding", "10px")
+      .style("pointer-events", "none")
+      .style("box-shadow", "0 2px 4px rgba(0,0,0,0.2)")
+      .style("font-size", "14px");
 
-    const svg = d3.select("#typeEffectiveness")
-        .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+    const svg = d3
+      .select("#typeEffectiveness")
+      .attr(
+        "viewBox",
+        `0 0 ${width + margin.left + margin.right} ${
+          height + margin.top + margin.bottom
+        }`
+      )
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const x = d3.scaleBand()
-        .domain(types)
-        .range([0, width])
-        .padding(0.05);
+    const x = d3.scaleBand().domain(types).range([0, width]).padding(0.05);
 
-    const y = d3.scaleBand()
-        .domain(types)
-        .range([0, height])
-        .padding(0.05);
+    const y = d3.scaleBand().domain(types).range([0, height]).padding(0.05);
 
     const effectivenessColorScale = (value) => {
-        if (value >= 2) return "#4ecdc4";
-        if (value === 1) return "#ffffff";
-        if (value > 0 && value <= 0.5) return "#ff6b6b";
-        return "#444444";
+      if (value >= 2) return "#4ecdc4";
+      if (value === 1) return "#ffffff";
+      if (value > 0 && value <= 0.5) return "#ff6b6b";
+      return "#444444";
     };
 
     const highlightRelated = (type, isAttacking = true) => {
-        svg.selectAll(".cell rect")
-            .style("opacity", 0.3);
-        
-        if (isAttacking) {
-            svg.selectAll(".cell")
-                .filter(d => d.attacker === type)
-                .select("rect")
-                .style("opacity", 1);
-        } else {
-            svg.selectAll(".cell")
-                .filter(d => d.defender === type)
-                .select("rect")
-                .style("opacity", 1);
-        }
+      svg.selectAll(".cell rect").style("opacity", 0.3);
+
+      if (isAttacking) {
+        svg
+          .selectAll(".cell")
+          .filter((d) => d.attacker === type)
+          .select("rect")
+          .style("opacity", 1);
+      } else {
+        svg
+          .selectAll(".cell")
+          .filter((d) => d.defender === type)
+          .select("rect")
+          .style("opacity", 1);
+      }
     };
 
     const resetHighlight = () => {
-        svg.selectAll(".cell rect")
-            .style("opacity", 1);
+      svg.selectAll(".cell rect").style("opacity", 1);
     };
 
-    svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", -85)
-        .attr("text-anchor", "middle")
-        .style("font-size", "24px")
-        .style("font-weight", "bold")
-        .text("Pokémon Type Effectiveness Matrix");
+    svg
+      .append("text")
+      .attr("x", width / 2)
+      .attr("y", -85)
+      .attr("text-anchor", "middle")
+      .style("font-size", "24px")
+      .style("font-weight", "bold")
+      .text("Pokémon Type Effectiveness Matrix");
 
-    const xLabels = svg.append("g")
-        .selectAll(".xLabel")
-        .data(types)
-        .enter()
-        .append("g")
-        .attr("transform", d => `translate(${x(d) + x.bandwidth() / 2}, ${-25}) rotate(-45)`);
+    const xLabels = svg
+      .append("g")
+      .selectAll(".xLabel")
+      .data(types)
+      .enter()
+      .append("g")
+      .attr(
+        "transform",
+        (d) => `translate(${x(d) + x.bandwidth() / 2}, ${-25}) rotate(-45)`
+      );
 
-    xLabels.append("rect")
-        .attr("x", -20)
-        .attr("y", -10)
-        .attr("width", 40)
-        .attr("height", 20)
-        .attr("fill", d => typeColors[d].main)
-        .attr("rx", 4)
-        .attr("ry", 4)
-        .style("cursor", "pointer")
-        .on("mouseover", function(event, d) {
-            d3.select(this).attr("fill", typeColors[d].light);
-            highlightRelated(d, true);
-            tooltip.transition()
-                .duration(200)
-                .style("opacity", .9);
-            tooltip.html(`Attacking: ${d.charAt(0).toUpperCase() + d.slice(1)}`)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", function(event, d) {
-            d3.select(this).attr("fill", typeColors[d].main);
-            resetHighlight();
-            tooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-        });
+    xLabels
+      .append("rect")
+      .attr("x", -20)
+      .attr("y", -10)
+      .attr("width", 40)
+      .attr("height", 20)
+      .attr("fill", (d) => typeColors[d].main)
+      .attr("rx", 4)
+      .attr("ry", 4)
+      .style("cursor", "pointer")
+      .on("mouseover", function (event, d) {
+        d3.select(this).attr("fill", typeColors[d].light);
+        highlightRelated(d, true);
+        tooltip.transition().duration(200).style("opacity", 0.9);
+        tooltip
+          .html(`Attacking: ${d.charAt(0).toUpperCase() + d.slice(1)}`)
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 28 + "px");
+      })
+      .on("mouseout", function (event, d) {
+        d3.select(this).attr("fill", typeColors[d].main);
+        resetHighlight();
+        tooltip.transition().duration(500).style("opacity", 0);
+      });
 
-    xLabels.append("text")
-        .attr("class", "xLabel")
-        .attr("text-anchor", "middle")
-        .attr("x", 0)
-        .attr("y", 5)
-        .text(d => abbreviateType(d))
-        // .text(d => d)
-        .style("font-size", "12px")
-        .style("fill", "white")
-        .style("font-weight", "bold")
-        .style("pointer-events", "none");
+    xLabels
+      .append("text")
+      .attr("class", "xLabel")
+      .attr("text-anchor", "middle")
+      .attr("x", 0)
+      .attr("y", 5)
+      .text((d) => abbreviateType(d))
+      // .text(d => d)
+      .style("font-size", "12px")
+      .style("fill", "white")
+      .style("font-weight", "bold")
+      .style("pointer-events", "none");
 
-    const yLabels = svg.append("g")
-        .selectAll(".yLabel")
-        .data(types)
-        .enter()
-        .append("g")
-        .attr("transform", d => `translate(0, ${y(d) + y.bandwidth() / 2})`);
+    const yLabels = svg
+      .append("g")
+      .selectAll(".yLabel")
+      .data(types)
+      .enter()
+      .append("g")
+      .attr("transform", (d) => `translate(0, ${y(d) + y.bandwidth() / 2})`);
 
-    yLabels.append("rect")
-        .attr("x", -100)
-        .attr("y", -10)
-        .attr("width", 80)
-        .attr("height", 20)
-        .attr("fill", d => typeColors[d].main)
-        .attr("rx", 4)
-        .attr("ry", 4)
-        .style("cursor", "pointer")
-        .on("mouseover", function(event, d) {
-            d3.select(this).attr("fill", typeColors[d].light);
-            highlightRelated(d, false);
-            tooltip.transition()
-                .duration(200)
-                .style("opacity", .9);
-            tooltip.html(`Defending: ${d.charAt(0).toUpperCase() + d.slice(1)}`)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", function(event, d) {
-            d3.select(this).attr("fill", typeColors[d].main);
-            resetHighlight();
-            tooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-        });
+    yLabels
+      .append("rect")
+      .attr("x", -100)
+      .attr("y", -10)
+      .attr("width", 80)
+      .attr("height", 20)
+      .attr("fill", (d) => typeColors[d].main)
+      .attr("rx", 4)
+      .attr("ry", 4)
+      .style("cursor", "pointer")
+      .on("mouseover", function (event, d) {
+        d3.select(this).attr("fill", typeColors[d].light);
+        highlightRelated(d, false);
+        tooltip.transition().duration(200).style("opacity", 0.9);
+        tooltip
+          .html(`Defending: ${d.charAt(0).toUpperCase() + d.slice(1)}`)
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 28 + "px");
+      })
+      .on("mouseout", function (event, d) {
+        d3.select(this).attr("fill", typeColors[d].main);
+        resetHighlight();
+        tooltip.transition().duration(500).style("opacity", 0);
+      });
 
-    yLabels.append("text")
-        .attr("class", "yLabel")
-        .attr("text-anchor", "middle")
-        .attr("x", -60)
-        .attr("y", 5)
-        .text(d => d.charAt(0).toUpperCase() + d.slice(1))
-        .style("font-size", "12px")
-        .style("fill", "white")
-        .style("font-weight", "bold")
-        .style("pointer-events", "none");
+    yLabels
+      .append("text")
+      .attr("class", "yLabel")
+      .attr("text-anchor", "middle")
+      .attr("x", -60)
+      .attr("y", 5)
+      .text((d) => d.charAt(0).toUpperCase() + d.slice(1))
+      .style("font-size", "12px")
+      .style("fill", "white")
+      .style("font-weight", "bold")
+      .style("pointer-events", "none");
 
-    const cells = svg.selectAll(".cell")
-        .data(types.flatMap(attackType => 
-            types.map(defenseType => ({
-                attacker: attackType,
-                defender: defenseType,
-                effectiveness: typeEffectivenessData[attackType][defenseType]
-            }))
-        ))
-        .enter()
-        .append("g")
-        .attr("class", "cell");
+    const cells = svg
+      .selectAll(".cell")
+      .data(
+        types.flatMap((attackType) =>
+          types.map((defenseType) => ({
+            attacker: attackType,
+            defender: defenseType,
+            effectiveness: typeEffectivenessData[attackType][defenseType],
+          }))
+        )
+      )
+      .enter()
+      .append("g")
+      .attr("class", "cell");
 
-    cells.append("rect")
-        .attr("x", d => x(d.attacker))
-        .attr("y", d => y(d.defender))
-        .attr("width", x.bandwidth())
-        .attr("height", y.bandwidth())
-        .attr("fill", d => effectivenessColorScale(d.effectiveness))
-        .attr("stroke", "#ccc")
-        .attr("stroke-width", 1)
-        .style("cursor", "pointer")
-        .on("mouseover", function(event, d) {
-            d3.select(this).style("stroke", "#333").style("stroke-width", 2);
-            tooltip.transition()
-                .duration(200)
-                .style("opacity", .9);
-            tooltip.html(`
-                <strong>${d.attacker.charAt(0).toUpperCase() + d.attacker.slice(1)}</strong> →
-                <strong>${d.defender.charAt(0).toUpperCase() + d.defender.slice(1)}</strong><br>
+    cells
+      .append("rect")
+      .attr("x", (d) => x(d.attacker))
+      .attr("y", (d) => y(d.defender))
+      .attr("width", x.bandwidth())
+      .attr("height", y.bandwidth())
+      .attr("fill", (d) => effectivenessColorScale(d.effectiveness))
+      .attr("stroke", "#ccc")
+      .attr("stroke-width", 1)
+      .style("cursor", "pointer")
+      .on("mouseover", function (event, d) {
+        d3.select(this).style("stroke", "#333").style("stroke-width", 2);
+        tooltip.transition().duration(200).style("opacity", 0.9);
+        tooltip
+          .html(
+            `
+                <strong>${
+                  d.attacker.charAt(0).toUpperCase() + d.attacker.slice(1)
+                }</strong> →
+                <strong>${
+                  d.defender.charAt(0).toUpperCase() + d.defender.slice(1)
+                }</strong><br>
                 Effectiveness: ${d.effectiveness}×
-            `)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", function() {
-            d3.select(this).style("stroke", "#ccc").style("stroke-width", 1);
-            
-            tooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-        });
+            `
+          )
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 28 + "px");
+      })
+      .on("mouseout", function () {
+        d3.select(this).style("stroke", "#ccc").style("stroke-width", 1);
 
-    cells.append("text")
-        .attr("x", d => x(d.attacker) + x.bandwidth() / 2)
-        .attr("y", d => y(d.defender) + y.bandwidth() / 2)
-        .attr("dy", "0.35em")
-        .attr("text-anchor", "middle")
-        .style("font-size", "11px")
-        .style("fill", d => {
-            if (d.effectiveness === 0) return "#ffffff";
-            return d.effectiveness >= 2 ? "white" : "black";
-        })
-        .style("pointer-events", "none")
-        .text(d => d.effectiveness === 1 ? "" : d.effectiveness);
+        tooltip.transition().duration(500).style("opacity", 0);
+      });
+
+    cells
+      .append("text")
+      .attr("x", (d) => x(d.attacker) + x.bandwidth() / 2)
+      .attr("y", (d) => y(d.defender) + y.bandwidth() / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "middle")
+      .style("font-size", "11px")
+      .style("fill", (d) => {
+        if (d.effectiveness === 0) return "#ffffff";
+        return d.effectiveness >= 2 ? "white" : "black";
+      })
+      .style("pointer-events", "none")
+      .text((d) => (d.effectiveness === 1 ? "" : d.effectiveness));
 
     const legendData = [
-        { value: 2, text: "Super Effective", color: "#4ecdc4" },
-        { value: 1, text: "Normal", color: "#ffffff" },
-        { value: 0.5, text: "Not Very Effective", color: "#ff6b6b" },
-        { value: 0, text: "No Effect", color: "#444444" }
+      { value: 2, text: "Super Effective", color: "#4ecdc4" },
+      { value: 1, text: "Normal", color: "#ffffff" },
+      { value: 0.5, text: "Not Very Effective", color: "#ff6b6b" },
+      { value: 0, text: "No Effect", color: "#444444" },
     ];
 
-    const legend = svg.append("g")
-        .attr("class", "legend")
-        .attr("transform", `translate(${width + 20}, 0)`);
+    const legend = svg
+      .append("g")
+      .attr("class", "legend")
+      .attr("transform", `translate(${width + 20}, 0)`);
 
-    const legendItems = legend.selectAll(".legendItem")
-        .data(legendData)
-        .enter()
-        .append("g")
-        .attr("class", "legendItem")
-        .attr("transform", (d, i) => `translate(0, ${i * 25})`);
+    const legendItems = legend
+      .selectAll(".legendItem")
+      .data(legendData)
+      .enter()
+      .append("g")
+      .attr("class", "legendItem")
+      .attr("transform", (d, i) => `translate(0, ${i * 25})`);
 
-    legendItems.append("rect")
-        .attr("width", 20)
-        .attr("height", 20)
-        .attr("fill", d => d.color)
-        .attr("stroke", "#ccc")
-        .attr("stroke-width", 1);
+    legendItems
+      .append("rect")
+      .attr("width", 20)
+      .attr("height", 20)
+      .attr("fill", (d) => d.color)
+      .attr("stroke", "#ccc")
+      .attr("stroke-width", 1);
 
-    legendItems.append("text")
-        .attr("x", 30)
-        .attr("y", 15)
-        .text(d => d.text)
-        .style("font-size", "12px");
+    legendItems
+      .append("text")
+      .attr("x", 30)
+      .attr("y", 15)
+      .text((d) => d.text)
+      .style("font-size", "12px");
 
-    svg.append("text")
-        .attr("x", -height/2)
-        .attr("y", -margin.left + 30)
-        .attr("transform", "rotate(-90)")
-        .style("text-anchor", "middle")
-        .style("font-size", "14px")
-        .style("font-weight", "bold")
-        .text("Defending Type");
+    svg
+      .append("text")
+      .attr("x", -height / 2)
+      .attr("y", -margin.left + 30)
+      .attr("transform", "rotate(-90)")
+      .style("text-anchor", "middle")
+      .style("font-size", "14px")
+      .style("font-weight", "bold")
+      .text("Defending Type");
 
-    svg.append("text")
-        .attr("x", width/2)
-        .attr("y", -60)
-        .style("text-anchor", "middle")
-        .style("font-size", "14px")
-        .style("font-weight", "bold")
-        .text("Attacking Type");
-}
+    svg
+      .append("text")
+      .attr("x", width / 2)
+      .attr("y", -60)
+      .style("text-anchor", "middle")
+      .style("font-size", "14px")
+      .style("font-weight", "bold")
+      .text("Attacking Type");
+  }
 
-d3.json("/dataset/Preprocessed/type_effectiveness.json").then(function(data) {
-        createEffectivenessMatrix(data);
-    })
+  d3.json("/dataset/Preprocessed/type_effectiveness.json").then(function (
+    data
+  ) {
+    createEffectivenessMatrix(data);
+  });
 
-window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     d3.json("/dataset/Preprocessed/type_effectiveness.json")
-        .then(function(data) {
-            createEffectivenessMatrix(data);
-        })
-        .catch(function(error) {
-            console.error("Error loading the data:", error);
-        });
-});
-
+      .then(function (data) {
+        createEffectivenessMatrix(data);
+      })
+      .catch(function (error) {
+        console.error("Error loading the data:", error);
+      });
+  });
 });

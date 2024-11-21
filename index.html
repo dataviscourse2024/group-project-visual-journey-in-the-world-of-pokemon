@@ -38,7 +38,21 @@
             <div class="container split-half">
                 <div class="col" class="split-half left-half" id="pokemonTableContainer" style="height: 847px;">
                     <!-- <h1>Left Half</h1> -->
-                    <h1>Pokemon Stats Table</h1>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h1>Pokemon Stats Table</h1>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <label for="generationFilter" style="font-weight: bold;">Generation:</label>
+                            <select id="generationFilter" class="form-select">
+                                <option value="all">All Generations</option>
+                                <option value="1">Generation 1</option>
+                                <option value="2">Generation 2</option>
+                                <option value="3">Generation 3</option>
+                                <option value="4">Generation 4</option>
+                                <option value="5">Generation 5</option>
+                                <option value="6">Generation 6</option>
+                            </select>
+                        </div>
+                    </div>
                     <div id="allPokemonStats"></div>
                 </div>
             </div>
