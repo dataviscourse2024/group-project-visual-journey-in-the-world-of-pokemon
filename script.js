@@ -25,6 +25,77 @@ document.addEventListener("DOMContentLoaded", function () {
   d3.select(".stats-card").style("display", "none");
 
   // Section 1 - Left
+  // function displayAllPokemonStats(pokemonStats) {
+  //   let statsTable = `<table class="pokemon-stats-table">
+  //           <thead>
+  //               <tr>
+  //                   <th>#</th>
+  //                   <th>Name</th>
+  //                   <th>Type</th>
+  //                   <th>HP</th>
+  //                   <th>Attack</th>
+  //                   <th>Defense</th>
+  //                   <th>Sp. Attack</th>
+  //                   <th>Sp. Defense</th>
+  //                   <th>Speed</th>
+  //               </tr>
+  //           </thead>
+  //           <tbody>`;
+
+  //   pokemonStats.forEach((pokemon, index) => {
+  //     statsTable += `
+  //               <tr>
+  //                   <td>${index + 1}</td>
+  //                   <td>${pokemon.name}</td>
+  //                   <td>${pokemon.type1}${
+  //       pokemon.type2 ? "/" + pokemon.type2 : ""
+  //     }</td>
+  //                   <td>${pokemon.hp}</td>
+  //                   <td>${pokemon.attack}</td>
+  //                   <td>${pokemon.defense}</td>
+  //                   <td>${pokemon.sp_attack}</td>
+  //                   <td>${pokemon.sp_defense}</td>
+  //                   <td>${pokemon.speed}</td>
+  //               </tr>
+  //           `;
+  //   });
+
+  //   statsTable += `</tbody></table>`;
+
+  //   d3.select("#allPokemonStats").html(statsTable);
+
+  //   //Hover effects
+  //   const rows = d3.selectAll(".pokemon-stats-table tbody tr");
+  //   rows
+  //     .on("mouseover", function () {
+  //       d3.select(this).style("background-color", "#ff6347");
+  //     })
+  //     .on("mouseout", function () {
+  //       d3.select(this).style("background-color", null);
+  //     });
+
+  //   rows.on("click", function (event) {
+  //     rows.classed("selected", false);
+  //     d3.select(this).classed("selected", true);
+  //   });
+
+  //   // on click on table - show visualization on right
+  //   d3.select("#allPokemonStats").on("click", function (event) {
+  //     const target = d3.select(event.target);
+
+  //     if (target.node().tagName === "TD") {
+  //       const row = target.node().parentNode;
+  //       const pokemonName = row.cells[1].textContent; // pokemon name is 2nd column
+
+  //       // Show the stats card
+  //       d3.select(".stats-card").style("display", "block");
+
+  //       // Update visualizations
+  //       updateVisualization(pokemonName);
+  //     }
+  //   });
+  // }
+
   function displayAllPokemonStats(pokemonStats) {
     let statsTable = `<table class="pokemon-stats-table">
             <thead>
@@ -42,29 +113,61 @@ document.addEventListener("DOMContentLoaded", function () {
             </thead>
             <tbody>`;
 
+    // Type colors mapping
+    const typeColors = {
+        fire: { main: "#EE8130", light: "#ff9d57" },
+        water: { main: "#6390F0", light: "#89aeff" },
+        grass: { main: "#7AC74C", light: "#98e670" },
+        electric: { main: "#F7D02C", light: "#ffe056" },
+        ice: { main: "#96D9D6", light: "#b8ecea" },
+        fighting: { main: "#C22E28", light: "#e54a43" },
+        poison: { main: "#A33EA1", light: "#c655c4" },
+        ground: { main: "#E2BF65", light: "#f5d989" },
+        flying: { main: "#A98FF3", light: "#c4b2ff" },
+        psychic: { main: "#F95587", light: "#ff7ca6" },
+        bug: { main: "#A6B91A", light: "#c5db2d" },
+        rock: { main: "#B6A136", light: "#d4bc45" },
+        ghost: { main: "#735797", light: "#9173b5" },
+        dragon: { main: "#6F35FC", light: "#915aff" },
+        dark: { main: "#705746", light: "#8f735f" },
+        steel: { main: "#B7B7CE", light: "#d6d6e7" },
+        fairy: { main: "#D685AD", light: "#ffa7cf" },
+        normal: { main: "#A8A878", light: "#c1cba7" }
+    };
+
     pokemonStats.forEach((pokemon, index) => {
-      statsTable += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${pokemon.name}</td>
-                    <td>${pokemon.type1}${
-        pokemon.type2 ? "/" + pokemon.type2 : ""
-      }</td>
-                    <td>${pokemon.hp}</td>
-                    <td>${pokemon.attack}</td>
-                    <td>${pokemon.defense}</td>
-                    <td>${pokemon.sp_attack}</td>
-                    <td>${pokemon.sp_defense}</td>
-                    <td>${pokemon.speed}</td>
-                </tr>
-            `;
+        const type1 = pokemon.type1.toLowerCase(); // Make sure it's in lowercase
+        const type2 = pokemon.type2 ? pokemon.type2.toLowerCase() : null;
+
+        // Determine background colors for type1 and type2
+        const type1Color = typeColors[type1] ? typeColors[type1].main : "#ffffff";
+        const type2Color = type2 && typeColors[type2] ? typeColors[type2].main : "#ffffff";
+
+        statsTable += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${pokemon.name}</td>
+                <td>
+                    <span style="background-color: ${type1Color}; padding: 2px 8px; border-radius: 5px; color: white;">${pokemon.type1}</span>
+                    ${pokemon.type2 ? 
+                    `<span style="background-color: ${type2Color}; padding: 2px 8px; border-radius: 5px; color: white; margin-left: 5px;">${pokemon.type2}</span>` 
+                    : ""}
+                </td>
+                <td>${pokemon.hp}</td>
+                <td>${pokemon.attack}</td>
+                <td>${pokemon.defense}</td>
+                <td>${pokemon.sp_attack}</td>
+                <td>${pokemon.sp_defense}</td>
+                <td>${pokemon.speed}</td>
+            </tr>
+        `;
     });
 
     statsTable += `</tbody></table>`;
 
     d3.select("#allPokemonStats").html(statsTable);
 
-    //Hover effects
+    // Hover effects
     const rows = d3.selectAll(".pokemon-stats-table tbody tr");
     rows
       .on("mouseover", function () {
@@ -79,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
       d3.select(this).classed("selected", true);
     });
 
-    // on click on table - show visualization on right
+    // On click on table - show visualization on right
     d3.select("#allPokemonStats").on("click", function (event) {
       const target = d3.select(event.target);
 
@@ -92,9 +195,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Update visualizations
         updateVisualization(pokemonName);
+        updateVisualization(pokemonName);
       }
     });
-  }
+}
+
 
   function updateVisualization(pokemonName) {
     const pokemon = pokemonStats.find((p) => p.name === pokemonName);
@@ -114,7 +219,8 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             genderDisplay = '<span class="gender-symbol">♂</span><span class="gender-symbol">♀</span>';
         }
-        
+      
+      console.log(pokemon.abilities)
       const statsHtml = `
             <div class="pokemon-info-grid">
                 <div class="info-row">
@@ -135,7 +241,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 <div class="info-row">
                     <div class="info-label">Abilities</div>
-                    <div class="info-value">${pokemon.abilities || 'Unknown'}</div>
+                    <div class="info-value">
+                        ${pokemon.abilities
+                            ? pokemon.abilities
+                                .replace(/[\[\]']+/g, '')   
+                                .replace(/\s+/g, '')         
+                                .replace(/,/g, ', ')       
+                            : 'Unknown'}
+                    </div>
+                    
                 </div>
             </div>
         `;
