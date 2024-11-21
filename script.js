@@ -643,6 +643,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const radius = Math.min(cfg.w / 2 - cfg.margin, cfg.h / 2 - cfg.margin);
     const angleSlice = (Math.PI * 2) / total;
 
+    const growScale = d3.scaleLinear().domain([0, 1]).range([0, 1]);
+
     const svg = d3
       .select(parentSelector)
       .append("svg")
@@ -728,9 +730,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const radarLine = d3
       .lineRadial()
-      .radius((d) => d.value)
+      .radius((d) => d.value * growScale(0)) // Start from 0
       .angle((d, i) => i * angleSlice)
-      .curve(d3.curveLinearClosed); // Use curveLinearClosed to ensure the path is closed
+      .curve(d3.curveLinearClosed);
 
     // Convert data for the radar line
     const scaledData = data[0].map((d) => ({
@@ -738,7 +740,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }));
 
     // Add the radar area
-    svg
+    const path = svg
       .append("path")
       .datum(scaledData)
       .attr("d", radarLine)
@@ -747,17 +749,42 @@ document.addEventListener("DOMContentLoaded", function () {
       .style("stroke", cfg.color)
       .style("stroke-width", "2px");
 
+    const pathLength = path.node().getTotalLength();
+    path
+      .attr("stroke-dasharray", `${pathLength} ${pathLength}`)
+      .attr("stroke-dashoffset", pathLength)
+      .transition()
+      .duration(1000)
+      .attr("stroke-dashoffset", 0)
+      .tween("grow", () => {
+        return (t) => {
+          const scale = growScale(t);
+          const line = d3
+            .lineRadial()
+            .radius((d) => d.value * scale)
+            .angle((d, i) => i * angleSlice)
+            .curve(d3.curveLinearClosed);
+          path.attr("d", line(scaledData));
+        };
+      });
+
     // Add dots at each data point
-    svg
-      .selectAll(".dot")
-      .data(dataPoints)
-      .enter()
-      .append("circle")
-      .attr("class", "dot")
-      .attr("r", 4)
-      .attr("cx", (d) => d.x)
-      .attr("cy", (d) => d.y)
-      .style("fill", cfg.color);
+    const dots = svg.selectAll(".dot")
+        .data(dataPoints)
+        .enter()
+        .append("circle")
+        .attr("class", "dot")
+        .attr("r", 4)
+        .attr("cx", 0) // Start from center
+        .attr("cy", 0)
+        .style("fill", cfg.color)
+        .style("opacity", 0);
+
+        dots.transition()
+        .duration(1000)
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y)
+        .style("opacity", 1);
 
     // Add value labels
     // svg.selectAll(".value-label")
