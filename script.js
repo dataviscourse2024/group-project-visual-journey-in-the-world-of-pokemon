@@ -377,8 +377,8 @@ document.addEventListener("DOMContentLoaded", function () {
       .scaleOrdinal()
       .domain(stats.map((d) => d.label))
       .range([
-        "#FF6B6B",
-        "#4ECDC4",
+        "#a40000 ",
+        "#4e9a06 ",
         "#45B7D1",
         "#96CEB4",
         "#FFEEAD",
@@ -482,7 +482,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("y", 30)
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", "#4ECDC4")
+      .attr("fill", "#4e9a06 ")
       .style("opacity", 0.7);
 
     legend
@@ -781,7 +781,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // d3.select(`#pokemon${pokemonNumber}Stats`).html(statsHtml);
     } else {
       imgElement
-        .attr("src", "Dataset/images/pokemon_jpg/Pokeball.jpg")
+        .attr("src", "Dataset/images/pokemon_png/Pokeball.png")
         .attr("alt", "Select a Pokémon");
       d3.select(`#pokemon${pokemonNumber}Stats`).html("");
     }
@@ -1255,9 +1255,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const y = d3.scaleBand().domain(types).range([0, height]).padding(0.05);
 
     const effectivenessColorScale = (value) => {
-      if (value >= 2) return "#4ecdc4";
+      if (value >= 2) return "#4e9a06 ";
       if (value === 1) return "#ffffff";
-      if (value > 0 && value <= 0.5) return "#ff6b6b";
+      if (value > 0 && value <= 0.5) return "#a40000 ";
       return "#444444";
     };
 
@@ -1450,9 +1450,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .text((d) => (d.effectiveness === 1 ? "" : d.effectiveness));
 
     const legendData = [
-      { value: 2, text: "Super Effective", color: "#4ecdc4" },
+      { value: 2, text: "Super Effective", color: "#4e9a06" },
       { value: 1, text: "Normal", color: "#ffffff" },
-      { value: 0.5, text: "Not Very Effective", color: "#ff6b6b" },
+      { value: 0.5, text: "Not Very Effective", color: "#a40000 " },
       { value: 0, text: "No Effect", color: "#444444" },
     ];
 
