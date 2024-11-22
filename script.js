@@ -12,6 +12,15 @@ document.addEventListener("DOMContentLoaded", function () {
       displayAllPokemonStats(pokemonStats);
       initializeInterface();
       initializeBattleButton();
+      const firstPokemon = pokemonStats[0].name;
+
+      d3.select(".stats-card").style("display", "block");
+
+      d3.selectAll(".pokemon-stats-table tbody tr").classed(
+        "selected",
+        (d, i) => i === 0
+      );
+      updateVisualization(firstPokemon);
     })
     .catch(function (error) {
       console.error("Error loading data:", error);
@@ -145,11 +154,13 @@ document.addEventListener("DOMContentLoaded", function () {
           const pokemonName = row.cells[1].textContent;
           d3.select(".stats-card").style("display", "block");
 
-          d3.json("/Dataset/Preprocessed/type_effectiveness.json").then(function (data) {
-            typeEffectiveness = data;
-            updateVisualization(pokemonName);
-            updateVisualization(pokemonName);
-          })
+          d3.json("/Dataset/Preprocessed/type_effectiveness.json").then(
+            function (data) {
+              typeEffectiveness = data;
+              updateVisualization(pokemonName);
+              updateVisualization(pokemonName);
+            }
+          );
         }
       });
     }
@@ -159,7 +170,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const selectedGeneration = this.value;
       filterByGeneration(selectedGeneration);
     });
+
+    const firstRow = d3.select(".pokemon-stats-table tbody tr:first-child");
+    firstRow.classed("selected", true);
+    d3.select(".stats-card").style("display", "block");
+    updateVisualization(pokemonStats[0].name);
   }
+
+  
 
   function updateVisualization(pokemonName) {
     const pokemon = pokemonStats.find((p) => p.name === pokemonName);
@@ -175,7 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const strengths = [];
         const weaknesses = [];
         const effectiveness = typeEffectiveness[type];
-      
+
         if (effectiveness) {
           for (const [againstType, value] of Object.entries(effectiveness)) {
             if (value >= 2) {
@@ -185,18 +203,20 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           }
         }
-      
+
         const uniqueStrengths = [...new Set(strengths)];
         const uniqueWeaknesses = [...new Set(weaknesses)];
-      
+
         return {
           strengths: uniqueStrengths,
-          weaknesses: uniqueWeaknesses
+          weaknesses: uniqueWeaknesses,
         };
       }
-      
-      const { strengths, weaknesses } = getStrengthsAndWeaknesses(pokemon.type1);
-      
+
+      const { strengths, weaknesses } = getStrengthsAndWeaknesses(
+        pokemon.type1
+      );
+
       const statsHtml = `
             <div class="pokemon-info-grid">
                 <div class="info-row">
@@ -228,11 +248,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 <div class="info-row">
                   <div class="info-label">Strength</div>
-                  <div class="info-value">${strengths.length > 0 ? strengths.join(", ") : "None"}</div>
+                  <div class="info-value">${
+                    strengths.length > 0 ? strengths.join(", ") : "None"
+                  }</div>
                 </div>
                 <div class="info-row">
                   <div class="info-label">Weakness</div>
-                  <div class="info-value">${weaknesses.length > 0 ? weaknesses.join(", ") : "None"}</div>
+                  <div class="info-value">${
+                    weaknesses.length > 0 ? weaknesses.join(", ") : "None"
+                  }</div>
                 </div>
             </div>
         `;
@@ -684,22 +708,24 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
     // Add dots at each data point
-    const dots = svg.selectAll(".dot")
-        .data(dataPoints)
-        .enter()
-        .append("circle")
-        .attr("class", "dot")
-        .attr("r", 4)
-        .attr("cx", 0) // Start from center
-        .attr("cy", 0)
-        .style("fill", cfg.color)
-        .style("opacity", 0);
+    const dots = svg
+      .selectAll(".dot")
+      .data(dataPoints)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("r", 4)
+      .attr("cx", 0) // Start from center
+      .attr("cy", 0)
+      .style("fill", cfg.color)
+      .style("opacity", 0);
 
-        dots.transition()
-        .duration(1000)
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y)
-        .style("opacity", 1);
+    dots
+      .transition()
+      .duration(1000)
+      .attr("cx", (d) => d.x)
+      .attr("cy", (d) => d.y)
+      .style("opacity", 1);
 
     // Add value labels
     // svg.selectAll(".value-label")
