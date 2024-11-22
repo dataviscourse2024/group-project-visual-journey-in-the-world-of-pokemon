@@ -9,10 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .then(function ([statsData, combatData]) {
       pokemonStats = statsData;
       combatResults = combatData;
-      // console.log("Pokemon Stats loaded:");
-      // console.log("Combat Results loaded:");
       displayAllPokemonStats(pokemonStats);
-      //d3.select("#pokemonVisualization").html("<h3>Select a Pokémon to see its visualization</h3>");
       initializeInterface();
       initializeBattleButton();
     })
@@ -23,78 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   d3.select(".stats-card").style("display", "none");
-
-  // Section 1 - Left
-  // function displayAllPokemonStats(pokemonStats) {
-  //   let statsTable = `<table class="pokemon-stats-table">
-  //           <thead>
-  //               <tr>
-  //                   <th>#</th>
-  //                   <th>Name</th>
-  //                   <th>Type</th>
-  //                   <th>HP</th>
-  //                   <th>Attack</th>
-  //                   <th>Defense</th>
-  //                   <th>Sp. Attack</th>
-  //                   <th>Sp. Defense</th>
-  //                   <th>Speed</th>
-  //               </tr>
-  //           </thead>
-  //           <tbody>`;
-
-  //   pokemonStats.forEach((pokemon, index) => {
-  //     statsTable += `
-  //               <tr>
-  //                   <td>${index + 1}</td>
-  //                   <td>${pokemon.name}</td>
-  //                   <td>${pokemon.type1}${
-  //       pokemon.type2 ? "/" + pokemon.type2 : ""
-  //     }</td>
-  //                   <td>${pokemon.hp}</td>
-  //                   <td>${pokemon.attack}</td>
-  //                   <td>${pokemon.defense}</td>
-  //                   <td>${pokemon.sp_attack}</td>
-  //                   <td>${pokemon.sp_defense}</td>
-  //                   <td>${pokemon.speed}</td>
-  //               </tr>
-  //           `;
-  //   });
-
-  //   statsTable += `</tbody></table>`;
-
-  //   d3.select("#allPokemonStats").html(statsTable);
-
-  //   //Hover effects
-  //   const rows = d3.selectAll(".pokemon-stats-table tbody tr");
-  //   rows
-  //     .on("mouseover", function () {
-  //       d3.select(this).style("background-color", "#ff6347");
-  //     })
-  //     .on("mouseout", function () {
-  //       d3.select(this).style("background-color", null);
-  //     });
-
-  //   rows.on("click", function (event) {
-  //     rows.classed("selected", false);
-  //     d3.select(this).classed("selected", true);
-  //   });
-
-  //   // on click on table - show visualization on right
-  //   d3.select("#allPokemonStats").on("click", function (event) {
-  //     const target = d3.select(event.target);
-
-  //     if (target.node().tagName === "TD") {
-  //       const row = target.node().parentNode;
-  //       const pokemonName = row.cells[1].textContent; // pokemon name is 2nd column
-
-  //       // Show the stats card
-  //       d3.select(".stats-card").style("display", "block");
-
-  //       // Update visualizations
-  //       updateVisualization(pokemonName);
-  //     }
-  //   });
-  // }
 
   function displayAllPokemonStats(pokemonStats) {
     let statsTable = `<table class="pokemon-stats-table">
@@ -196,47 +121,9 @@ document.addEventListener("DOMContentLoaded", function () {
       statsTable += `</tbody></table>`;
       d3.select("#allPokemonStats").html(statsTable);
 
-      // Reattach event listeners
       attachTableEventListeners();
     }
-    // pokemonStats.forEach((pokemon, index) => {
-    //   const type1 = pokemon.type1.toLowerCase(); // Make sure it's in lowercase
-    //   const type2 = pokemon.type2 ? pokemon.type2.toLowerCase() : null;
 
-    //   // Determine background colors for type1 and type2
-    //   const type1Color = typeColors[type1] ? typeColors[type1].main : "#ffffff";
-    //   const type2Color =
-    //     type2 && typeColors[type2] ? typeColors[type2].main : "#ffffff";
-
-    //   statsTable += `
-    //         <tr>
-    //             <td>${index + 1}</td>
-    //             <td>${pokemon.name}</td>
-    //             <td>
-    //                 <span style="background-color: ${type1Color}; padding: 2px 8px; border-radius: 5px; color: white;">${
-    //     pokemon.type1
-    //   }</span>
-    //                 ${
-    //                   pokemon.type2
-    //                     ? `<span style="background-color: ${type2Color}; padding: 2px 8px; border-radius: 5px; color: white; margin-left: 5px;">${pokemon.type2}</span>`
-    //                     : ""
-    //                 }
-    //             </td>
-    //             <td>${pokemon.hp}</td>
-    //             <td>${pokemon.attack}</td>
-    //             <td>${pokemon.defense}</td>
-    //             <td>${pokemon.sp_attack}</td>
-    //             <td>${pokemon.sp_defense}</td>
-    //             <td>${pokemon.speed}</td>
-    //         </tr>
-    //     `;
-    // });
-
-    // statsTable += `</tbody></table>`;
-
-    // d3.select("#allPokemonStats").html(statsTable);
-
-    // Hover effects
     function attachTableEventListeners() {
       const rows = d3.selectAll(".pokemon-stats-table tbody tr");
       rows
@@ -251,15 +138,18 @@ document.addEventListener("DOMContentLoaded", function () {
           d3.select(this).classed("selected", true);
         });
 
-      // Table click handler for visualization
       d3.select("#allPokemonStats").on("click", function (event) {
         const target = d3.select(event.target);
         if (target.node().tagName === "TD") {
           const row = target.node().parentNode;
           const pokemonName = row.cells[1].textContent;
           d3.select(".stats-card").style("display", "block");
-          updateVisualization(pokemonName);
-          updateVisualization(pokemonName);
+
+          d3.json("/Dataset/Preprocessed/type_effectiveness.json").then(function (data) {
+            typeEffectiveness = data;
+            updateVisualization(pokemonName);
+            updateVisualization(pokemonName);
+          })
         }
       });
     }
@@ -281,7 +171,32 @@ document.addEventListener("DOMContentLoaded", function () {
       ).src = `Dataset/images/pokemon/${pokemon.image_filename}`;
       document.getElementById("pokemonImage").style.display = "block";
 
-      console.log(pokemon.abilities);
+      function getStrengthsAndWeaknesses(type) {
+        const strengths = [];
+        const weaknesses = [];
+        const effectiveness = typeEffectiveness[type];
+      
+        if (effectiveness) {
+          for (const [againstType, value] of Object.entries(effectiveness)) {
+            if (value >= 2) {
+              strengths.push(againstType);
+            } else if (value <= 0.5) {
+              weaknesses.push(againstType);
+            }
+          }
+        }
+      
+        const uniqueStrengths = [...new Set(strengths)];
+        const uniqueWeaknesses = [...new Set(weaknesses)];
+      
+        return {
+          strengths: uniqueStrengths,
+          weaknesses: uniqueWeaknesses
+        };
+      }
+      
+      const { strengths, weaknesses } = getStrengthsAndWeaknesses(pokemon.type1);
+      
       const statsHtml = `
             <div class="pokemon-info-grid">
                 <div class="info-row">
@@ -312,12 +227,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                 </div>
                 <div class="info-row">
-                    <div class="info-label">Strength</div>
-                    <div class="info-value">${pokemon.weight_kg} KG</div>
+                  <div class="info-label">Strength</div>
+                  <div class="info-value">${strengths.length > 0 ? strengths.join(", ") : "None"}</div>
                 </div>
                 <div class="info-row">
-                    <div class="info-label">Weakness</div>
-                    <div class="info-value">${pokemon.weight_kg} KG</div>
+                  <div class="info-label">Weakness</div>
+                  <div class="info-value">${weaknesses.length > 0 ? weaknesses.join(", ") : "None"}</div>
                 </div>
             </div>
         `;
