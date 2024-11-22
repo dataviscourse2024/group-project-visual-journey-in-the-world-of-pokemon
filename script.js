@@ -752,11 +752,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     dropdown2.append("option").attr("value", "").text("Select Pokémon");
 
-    const sortedPokemon = [...pokemonStats].sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-
-    sortedPokemon.forEach((pokemon) => {
+    pokemonStats.forEach((pokemon) => {
       dropdown1
         .append("option")
         .attr("value", pokemon.name)
@@ -1468,10 +1464,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
       .style("font-size", "11px")
-      .style("fill", (d) => {
-        if (d.effectiveness === 0) return "#ffffff";
-        return d.effectiveness >= 2 ? "white" : "black";
-      })
+      .style("fill", "white")
       .style("pointer-events", "none")
       .text((d) => (d.effectiveness === 1 ? "" : d.effectiveness));
 
