@@ -1511,7 +1511,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .style("text-anchor", "middle")
       .style("font-size", "14px")
       .style("font-weight", "bold")
-      .text("Defending Type");
+      .text("Attacking Type");
 
     svg
       .append("text")
@@ -1520,7 +1520,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .style("text-anchor", "middle")
       .style("font-size", "14px")
       .style("font-weight", "bold")
-      .text("Attacking Type");
+      .text("Defending Type");
   }
 
   d3.json("/dataset/Preprocessed/type_effectiveness.json").then(function (
