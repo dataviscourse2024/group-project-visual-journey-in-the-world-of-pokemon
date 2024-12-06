@@ -20,9 +20,6 @@
                 <a class="navbar-brand mr-auto" href="/">Visual Journey in the World of Pokemon</a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <!-- <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link" href="#section2">Battle Simulator</a>
                         </li>
@@ -41,7 +38,6 @@
         <section id="section1" class="section">
             <div class="container split-half">
                 <div class="col" class="split-half left-half" id="pokemonTableContainer" style="height: 847px;">
-                    <!-- <h1>Left Half</h1> -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h1>Pokemon Stats Table</h1>
                         <div style="display: flex; align-items: center; gap: 10px;">
@@ -63,16 +59,13 @@
             <div class="container split-half">
                 <div class="container stats-card text-center">
                     <h1>Pokemon Visualization</h1>
-                    <div class="row"> <!-- Main row -->
-                        <!-- First row of the 2x2 grid -->
+                    <div class="row">
                         <div class="col-md-6 stats-cell">
                             <img id="pokemonImage" src="" alt="Pokemon Image" class="pokemon-image" style="display: none;">
                         </div>
                         <div class="col-md-6 stats-cell">
                             <div id="pokemoncardStats" class="pokemon-stats">Stats Card TBD</div>
                         </div>
-                        
-                        <!-- Second row of the 2x2 grid -->
                         <div class="col-md-6 stats-cell">
                             <div id="pokemonVisualization"></div>
                         </div>
@@ -88,7 +81,6 @@
             <div class="container battle-container">
                 <h1 class="text-center mb-2">Pokemon Battle Arena</h1>
                 <div class="pokemon-select-area">
-                    <!-- Left Pokemon -->
                     <div class="pokemon-display">
                         <select id="pokemon1" class="pokemon-select form-select mb-4" aria-label="Select first Pokemon">
                             <option value="">Select Pokémon</option>
@@ -99,7 +91,6 @@
 
                     </div>
 
-                    <!-- VS Badge -->
                     <div class="div">
                         <div class="d-flex align-items-center">
                             <img src="assets/VS.png" class="versus-image">
@@ -114,7 +105,6 @@
                         </div>
                     </div>
 
-                    <!-- Right Pokemon -->
                     <div class="pokemon-display">
                         <select id="pokemon2" class="pokemon-select form-select mb-4" aria-label="Select first Pokemon">
                             <option value="">Select Pokémon</option>
@@ -122,17 +112,13 @@
                         <img id="pokemon2Image" src="Dataset\images\pokemon_png\Pokeball.png" alt="Pokemon 2"
                             class="pokemon-image">
                         <div id="pokemon2Stats" class="pokemon-stats"></div>
-
                     </div>
                 </div>
-
             </div>
         </section>
 
         <section id="section3" class="section">
             <div class="container">
-                <!-- <h1>Section 3</h1>
-                <h3>Type Effectiveness Matrix</h3> -->
                 <svg id="typeEffectiveness" width="700" height="700"></svg>
             </div>
         </section>

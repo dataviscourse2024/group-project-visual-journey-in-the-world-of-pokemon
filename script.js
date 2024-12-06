@@ -264,7 +264,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Section 1 - Right (Box Plot in Cell 4)
   function renderBoxPlot(pokemon) {
     const boxPlotContainer = d3.select("#boxPlotVisualization");
     boxPlotContainer.html("");
@@ -480,7 +479,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width * 0.85}, ${height * 0.1})`); // Position in top-right corner inside plot
+      .attr("transform", `translate(${width * 0.85}, ${height * 0.1})`);
 
     legend
       .append("circle")
@@ -515,7 +514,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .text("Stat Range");
   }
 
-  // Section 1 - Right (Radar Chart in Cell 3)
   function renderRadarChart(pokemon) {
     if (!pokemon) {
       console.error("No pokemon data provided");
@@ -636,13 +634,11 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("dy", "0.35em")
       .attr("x", (d, i) => {
         const x = radius * 1.15 * Math.cos(angleSlice * i - Math.PI / 2);
-        // Adjust label position based on quadrant
         if (Math.abs(x) < 1) return x + (x < 0 ? -10 : 10);
         return x;
       })
       .attr("y", (d, i) => {
         const y = radius * 1.15 * Math.sin(angleSlice * i - Math.PI / 2);
-        // Adjust label position based on quadrant
         if (Math.abs(y) < 1) return y + (y < 0 ? -10 : 10);
         return y;
       })
@@ -662,16 +658,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const radarLine = d3
       .lineRadial()
-      .radius((d) => d.value * growScale(0)) // Start from 0
+      .radius((d) => d.value * growScale(0)) 
       .angle((d, i) => i * angleSlice)
       .curve(d3.curveLinearClosed);
 
-    // Convert data for the radar line
     const scaledData = data[0].map((d) => ({
       value: (radius * d.value) / cfg.maxValue,
     }));
 
-    // Add the radar area
     const path = svg
       .append("path")
       .datum(scaledData)
@@ -700,7 +694,6 @@ document.addEventListener("DOMContentLoaded", function () {
         };
       });
 
-    // Add dots at each data point
     const dots = svg
       .selectAll(".dot")
       .data(dataPoints)
@@ -708,7 +701,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .append("circle")
       .attr("class", "dot")
       .attr("r", 4)
-      .attr("cx", 0) // Start from center
+      .attr("cx", 0)
       .attr("cy", 0)
       .style("fill", cfg.color)
       .style("opacity", 0);
@@ -719,21 +712,8 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("cx", (d) => d.x)
       .attr("cy", (d) => d.y)
       .style("opacity", 1);
-
-    // Add value labels
-    // svg.selectAll(".value-label")
-    //     .data(dataPoints)
-    //     .enter()
-    //     .append("text")
-    //     .attr("class", "value-label")
-    //     .attr("x", d => d.x * 1.1)
-    //     .attr("y", d => d.y * 1.1)
-    //     .style("font-size", "10px")
-    //     .style("fill", "#333")
-    //     .text(d => d.value);
   }
 
-  //section 2 - Battle Arena
   function initializeInterface() {
     const dropdown1 = d3.select("#pokemon1");
     const dropdown2 = d3.select("#pokemon2");
@@ -773,7 +753,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const dropdownId = `pokemon${pokemonNumber}`;
     const imageId = `pokemon${pokemonNumber}Image`;
     const selectedName = d3.select(`#${dropdownId}`).property("value");
-    // console.log(selectedName)
     const pokemon = pokemonStats.find((p) => p.name === selectedName);
     const imgElement = d3.select(`#${imageId}`);
 
@@ -819,8 +798,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const pokemon1 = pokemonStats.find((p) => p.name === pokemon1Name);
     const pokemon2 = pokemonStats.find((p) => p.name === pokemon2Name);
-    // console.log(pokemon1)
-    // console.log(pokemon2)
 
     const stats1 = [
       pokemon1.hp,
@@ -838,20 +815,13 @@ document.addEventListener("DOMContentLoaded", function () {
       pokemon2.sp_defense,
       pokemon2.speed,
     ];
-    // console.log(stats1)
-    // console.log(stats2)
 
     if (result) {
       const winner = pokemonStats.find((p) => p.name === result.winner_name);
       d3.select("#winner").html(`
                     <h3>Winner: ${result.winner_name}!</h3>
                 `);
-      // .html(`
-      //     <h3>Winner: ${result.winner_name}!</h3>
-      //     <p>Base Stats Total: ${winner.base_total}</p>
-      // `);
     } else {
-      // d3.select("#winner").html("<h3>No battle data available for these Pokémon</h3>");
       const sumStats1 = stats1.reduce((sum, stat) => sum + parseInt(stat), 0);
       const sumStats2 = stats2.reduce((sum, stat) => sum + parseInt(stat), 0);
       let winnerName, winnerTotal;
@@ -866,17 +836,11 @@ document.addEventListener("DOMContentLoaded", function () {
         winnerTotal = sumStats1;
       }
 
-      // d3.select("#winner")
-      //     .html(`
-      //         <h3>Winner: ${winnerName}!</h3>
-      //         <p>Base Stats Total: ${winnerTotal}</p>
-      //     `);
       d3.select("#winner").html(`
                     <h3>Winner: ${winnerName}!</h3>
                 `);
     }
 
-    // Create battle visualization container
     const battleContainer = d3.select(".battle-container");
     let visualizationDiv = battleContainer.select("#battleVisualizations");
 
@@ -987,7 +951,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width + 20}, 0)`); // Move legend outside chart area
+      .attr("transform", `translate(${width + 20}, 0)`);
 
     legend
       .append("rect")
@@ -1026,7 +990,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function createLineChart(labels, stats1, stats2, pokemon1Name, pokemon2Name) {
     d3.select("#lineChart").html("");
 
-    const margin = { top: 40, right: 150, bottom: 60, left: 60 }; // Increased right margin
+    const margin = { top: 40, right: 150, bottom: 60, left: 60 };
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
@@ -1138,7 +1102,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width + 20}, 0)`); // Move legend outside chart area
+      .attr("transform", `translate(${width + 20}, 0)`);
 
     legend
       .append("line")
@@ -1338,7 +1302,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("x", 0)
       .attr("y", 5)
       .text((d) => abbreviateType(d))
-      // .text(d => d)
       .style("font-size", "12px")
       .style("fill", "white")
       .style("font-weight", "bold")
