@@ -1504,14 +1504,14 @@ document.addEventListener("DOMContentLoaded", function () {
       .text("Defending Type");
   }
 
-  d3.json("/Dataset/Preprocessed/type_effectiveness.json").then(function (
+  d3.json("./Dataset/Preprocessed/type_effectiveness.json").then(function (
     data
   ) {
     createEffectivenessMatrix(data);
   });
 
   window.addEventListener("resize", () => {
-    d3.json("/Dataset/Preprocessed/type_effectiveness.json")
+    d3.json("./Dataset/Preprocessed/type_effectiveness.json")
       .then(function (data) {
         createEffectivenessMatrix(data);
       })
