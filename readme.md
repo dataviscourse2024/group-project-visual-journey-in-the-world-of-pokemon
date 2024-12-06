@@ -14,7 +14,7 @@ This project offers an interactive and engaging exploration of Pokémon data thr
 ## **Directory Structure**
 ```
 ├── assets/                      # Contains images, icons, and other assets
-├── code/                        # Core logic and algorithms for stats and visualizations
+├── code/                        
 │   ├── Pokemon_data_preprocessing.ipynb        # Pokémon data processing scripts
 ├── index.html                   # Main webpage file
 ├── styles.css                   # Styling for the platform
@@ -23,7 +23,7 @@ This project offers an interactive and engaging exploration of Pokémon data thr
 │   ├── pokemon_complete.csv        # Pokémon stats dataset
 │   ├── combats.csv                 # Original Combat dataset
 │   ├── images                      # Pokemon Images
-│   ├── Preprocessed                # Preproccessed Dataset
+│   ├── Preprocessed                
 │       ├── combats_results.csv                 # Preproccess Combat dataset
 │       ├── pokemon_stats_with_images.csv       # Pokémon stats dataset after preprocessing
 │       ├── type_effectiveness.json             # Type effectiveness dataset
