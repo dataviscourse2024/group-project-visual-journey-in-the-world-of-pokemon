@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const pokemonStatsUrl = "Dataset/Preprocessed/pokemon_stats_with_images.csv";
-  const combatResultsUrl = "Dataset/Preprocessed/combats_results.csv";
+  const pokemonStatsUrl = "./Dataset/Preprocessed/pokemon_stats_with_images.csv";
+  const combatResultsUrl = "./Dataset/Preprocessed/combats_results.csv";
 
   let pokemonStats = [];
   let combatResults = [];
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const pokemonName = row.cells[1].textContent;
           d3.select(".stats-card").style("display", "block");
 
-          d3.json("/Dataset/Preprocessed/type_effectiveness.json").then(
+          d3.json("./Dataset/Preprocessed/type_effectiveness.json").then(
             function (data) {
               typeEffectiveness = data;
               updateVisualization(pokemonName);
@@ -184,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
       renderBoxPlot(pokemon);
       document.getElementById(
         "pokemonImage"
-      ).src = `Dataset/images/pokemon/${pokemon.image_filename}`;
+      ).src = `./Dataset/images/pokemon/${pokemon.image_filename}`;
       document.getElementById("pokemonImage").style.display = "block";
 
       function getStrengthsAndWeaknesses(type) {
@@ -778,13 +778,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const imgElement = d3.select(`#${imageId}`);
 
     if (pokemon && pokemon.image_exists === "TRUE") {
-      const imagePath = `Dataset/images/pokemon/${pokemon.image_filename}`;
+      const imagePath = `./Dataset/images/pokemon/${pokemon.image_filename}`;
       console.log(imagePath);
       imgElement.attr("src", imagePath).attr("alt", `${pokemon.name} image`);
 
     } else {
       imgElement
-        .attr("src", "Dataset/images/pokemon_png/Pokeball.png")
+        .attr("src", "./Dataset/images/pokemon_png/Pokeball.png")
         .attr("alt", "Select a Pokémon");
       d3.select(`#pokemon${pokemonNumber}Stats`).html("");
     }
