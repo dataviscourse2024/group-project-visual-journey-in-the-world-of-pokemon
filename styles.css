@@ -4,6 +4,16 @@
 
 }
 
+.k-block {
+  color: white;
+  background-color: white;
+
+}
+
+.navbar-dark {
+  background-color: red;
+}
+
 .footer {
   background-color: black;
   margin: 0px;
@@ -15,26 +25,18 @@
   flex-shrink: 0;
 }
 
-.k-block {
-  color: white;
-  background-color: white;
-
-}
-
-.navbar-dark {
-  background-color: red;
-}
-
 .footer .container {
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center; /* Center horizontally */
 }
 
 .footer h5 {
   margin: 0;
+  text-align: center; /* Center the text within the h5 */
+  width: 100%; /* Ensure the h5 takes full width */
 }
-
 .split-section {
   display: flex;
   padding: 0;
@@ -323,4 +325,25 @@ html {
 .info-value {
   text-align: right;
   color: #666;
+}
+
+.d-flex.align-items-center {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.pokemon-select-area {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  gap: 20px; /* Adds consistent spacing between elements */
+}
+
+div:has(> .d-flex.align-items-center) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
