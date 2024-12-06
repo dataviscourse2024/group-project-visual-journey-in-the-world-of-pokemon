@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
           : pokemonStats.filter((p) => p.generation === generation);
       updateTable(filteredData);
     }
-    // Type colors mapping
+
     const typeColors = {
       fire: { main: "#EE8130", light: "#ff9d57" },
       water: { main: "#6390F0", light: "#89aeff" },
@@ -177,8 +177,6 @@ document.addEventListener("DOMContentLoaded", function () {
     updateVisualization(pokemonStats[0].name);
   }
 
-  
-
   function updateVisualization(pokemonName) {
     const pokemon = pokemonStats.find((p) => p.name === pokemonName);
     if (pokemon) {
@@ -283,8 +281,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const margin = {
       top: chartSize * 0.1,
-      right: chartSize * 0.05, // Reduced right margin
-      bottom: chartSize * 0.15, // Increased bottom margin for rotated labels
+      right: chartSize * 0.05, 
+      bottom: chartSize * 0.15, 
       left: chartSize * 0.1,
     };
 
@@ -555,7 +553,7 @@ document.addEventListener("DOMContentLoaded", function () {
       maxValue: 175,
       levels: 5,
       color: "#FF0000",
-      margin: chartSize * 0.1, // Dynamic margin based on chart size
+      margin: chartSize * 0.1, 
     });
   }
 
@@ -566,12 +564,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const defaultSize = Math.min(containerWidth, containerHeight);
 
     const cfg = {
-      w: defaultSize, // Use container width instead of fixed 300
-      h: defaultSize, // Use container height instead of fixed 300
+      w: defaultSize, 
+      h: defaultSize, 
       maxValue: 175,
       levels: 5,
       color: "#ff4500",
-      margin: defaultSize * 0.1, // 10% of size for margin
+      margin: defaultSize * 0.1, 
     };
 
     Object.assign(cfg, options);
@@ -591,11 +589,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("height", cfg.h)
       .append("g")
       .attr("transform", `translate(${cfg.w / 2}, ${cfg.h / 2})`);
-
-    // const rScale = d3
-    //   .scaleLinear()
-    //   .range([0, radius])
-    //   .domain([0, cfg.maxValue]);
 
     for (let j = 0; j < cfg.levels; j++) {
       const levelFactor = radius * ((j + 1) / cfg.levels);
@@ -789,18 +782,6 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log(imagePath);
       imgElement.attr("src", imagePath).attr("alt", `${pokemon.name} image`);
 
-      // const statsHtml = `
-      //     <div class="pokemon-stats">
-      //         <p>Type: ${pokemon.type1}${pokemon.type2 ? '/' + pokemon.type2 : ''}</p>
-      //         <p>HP: ${pokemon.hp}</p>
-      //         <p>Attack: ${pokemon.attack}</p>
-      //         <p>Defense: ${pokemon.defense}</p>
-      //         <p>Sp. Attack: ${pokemon.sp_attack}</p>
-      //         <p>Sp. Defense: ${pokemon.sp_defense}</p>
-      //         <p>Speed: ${pokemon.speed}</p>
-      //     </div>
-      // `;
-      // d3.select(`#pokemon${pokemonNumber}Stats`).html(statsHtml);
     } else {
       imgElement
         .attr("src", "Dataset/images/pokemon_png/Pokeball.png")
@@ -929,7 +910,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function createBarChart(labels, stats1, stats2, pokemon1Name, pokemon2Name) {
     d3.select("#barChart").html("");
 
-    const margin = { top: 40, right: 40, bottom: 60, left: 60 };
+    const margin = { top: 40, right: 150, bottom: 60, left: 60 };
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
@@ -977,14 +958,14 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("class", "bar1")
       .attr("x", (d, i) => x(labels[i]))
       .attr("width", x.bandwidth() / 2)
-      .attr("y", height) // Start at the bottom (height)
-      .attr("height", 0) // Start with 0 height
+      .attr("y", height)
+      .attr("height", 0)
       .attr("fill", "#FF4136")
       .attr("opacity", 0.7)
-      .transition() // Add transition
-      .duration(1000) // Duration of animation
-      .attr("y", (d) => y(d)) // Animate to the correct y position
-      .attr("height", (d) => height - y(d)); // Animate the height
+      .transition()
+      .duration(1000)
+      .attr("y", (d) => y(d))
+      .attr("height", (d) => height - y(d));
 
     svg
       .selectAll(".bar2")
@@ -994,19 +975,19 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("class", "bar2")
       .attr("x", (d, i) => x(labels[i]) + x.bandwidth() / 2)
       .attr("width", x.bandwidth() / 2)
-      .attr("y", height) // Start at the bottom (height)
-      .attr("height", 0) // Start with 0 height
+      .attr("y", height)
+      .attr("height", 0)
       .attr("fill", "#0074D9")
       .attr("opacity", 0.7)
-      .transition() // Add transition
-      .duration(1000) // Duration of animation
-      .attr("y", (d) => y(d)) // Animate to the correct y position
-      .attr("height", (d) => height - y(d)); // Animate the height
+      .transition()
+      .duration(1000)
+      .attr("y", (d) => y(d))
+      .attr("height", (d) => height - y(d));
 
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width - 100}, 0)`);
+      .attr("transform", `translate(${width + 20}, 0)`); // Move legend outside chart area
 
     legend
       .append("rect")
@@ -1045,7 +1026,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function createLineChart(labels, stats1, stats2, pokemon1Name, pokemon2Name) {
     d3.select("#lineChart").html("");
 
-    const margin = { top: 40, right: 40, bottom: 60, left: 60 };
+    const margin = { top: 40, right: 150, bottom: 60, left: 60 }; // Increased right margin
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
@@ -1099,13 +1080,13 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("d", line)
       .attr("stroke-dasharray", function () {
         return this.getTotalLength();
-      }) // Initially, path is not drawn
+      })
       .attr("stroke-dashoffset", function () {
         return this.getTotalLength();
-      }) // Set the dash offset to the length of the path
+      })
       .transition()
       .duration(1000)
-      .attr("stroke-dashoffset", 0); // Draw the path by animating the dash offset to 0
+      .attr("stroke-dashoffset", 0);
 
     svg
       .append("path")
@@ -1116,10 +1097,10 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("d", line)
       .attr("stroke-dasharray", function () {
         return this.getTotalLength();
-      }) // Initially, path is not drawn
+      })
       .attr("stroke-dashoffset", function () {
         return this.getTotalLength();
-      }) // Set the dash offset to the length of the path
+      })
       .transition()
       .duration(1000)
       .attr("stroke-dashoffset", 0);
@@ -1137,7 +1118,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("opacity", 0)
       .transition()
       .duration(1000)
-      .attr("opacity", 1); // Fade in the dots with a transition
+      .attr("opacity", 1);
 
     svg
       .selectAll(".dot2")
@@ -1152,12 +1133,12 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("opacity", 0)
       .transition()
       .duration(1000)
-      .attr("opacity", 1); // Fade in the dots with a transition
+      .attr("opacity", 1);
 
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width - 100}, 0)`);
+      .attr("transform", `translate(${width + 20}, 0)`); // Move legend outside chart area
 
     legend
       .append("line")
